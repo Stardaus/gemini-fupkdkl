@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Footer } from './Footer';
 
@@ -17,8 +17,8 @@ describe('Footer component', () => {
     expect(screen.getByText(/Pejabat Kesihatan Daerah Kuala Langat/i)).toBeInTheDocument();
   });
 
-  it('handles manual check update click', () => {
-    const handleCheck = vi.fn();
+  it('handles manual check update click with async feedback', async () => {
+    const handleCheck = vi.fn().mockResolvedValue({ hasUpdate: false });
     render(
       <Footer
         versionInfo={null}
@@ -26,10 +26,11 @@ describe('Footer component', () => {
       />
     );
 
-    const checkBtn = screen.getByRole('button', { name: /Check.*Updates/i });
-    fireEvent.click(checkBtn);
+    const checkBtn = screen.getByRole('button', { name: /Check for updates/i });
+    await act(async () => {
+      fireEvent.click(checkBtn);
+    });
     expect(handleCheck).toHaveBeenCalledTimes(1);
-    expect(checkBtn).toBeDisabled();
-    expect(screen.getByText(/Checking\.\.\./i)).toBeInTheDocument();
+    expect(screen.getByText(/Up to Date ✓/i)).toBeInTheDocument();
   });
 });

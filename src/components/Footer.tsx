@@ -1,26 +1,53 @@
 import { useState } from 'react';
-import { RefreshCw, Database, ShieldCheck, Cpu } from 'lucide-react';
+import { RefreshCw, Database, ShieldCheck, Cpu, CheckCircle2, AlertCircle } from 'lucide-react';
 import { VersionInfo } from '../types/formulary';
+
+export interface CheckUpdateResult {
+  hasUpdate?: boolean;
+  isOffline?: boolean;
+  error?: boolean;
+}
 
 export interface FooterProps {
   versionInfo: VersionInfo | null;
-  onCheckUpdate: () => void;
+  onCheckUpdate: () => Promise<CheckUpdateResult | void> | void;
 }
 
+type CheckState = 'idle' | 'checking' | 'up-to-date' | 'error';
+
 export function Footer({ versionInfo, onCheckUpdate }: FooterProps) {
-  const [isChecking, setIsChecking] = useState<boolean>(false);
+  const [checkState, setCheckState] = useState<CheckState>('idle');
   const dataVersion = versionInfo?.version || '2.0.0';
   const buildId = __APP_BUILD_ID__;
   const buildTime = __APP_BUILD_TIME__;
 
-  const handleCheck = () => {
-    setIsChecking(true);
-    onCheckUpdate();
-    const globalCheck = (window as unknown as { checkPWAUpdate?: () => void }).checkPWAUpdate;
-    if (globalCheck) {
-      globalCheck();
+  const handleCheck = async () => {
+    if (checkState === 'checking') return;
+    setCheckState('checking');
+
+    try {
+      // Trigger PWA Service Worker check if available
+      const globalCheck = (window as unknown as { checkPWAUpdate?: () => void }).checkPWAUpdate;
+      if (globalCheck) {
+        globalCheck();
+      }
+
+      // Execute data version check promise
+      const result = await onCheckUpdate();
+      
+      if (result?.isOffline || result?.error) {
+        setCheckState('error');
+        setTimeout(() => setCheckState('idle'), 3000);
+      } else if (result?.hasUpdate) {
+        setCheckState('idle');
+      } else {
+        setCheckState('up-to-date');
+        setTimeout(() => setCheckState('idle'), 2500);
+      }
+    } catch {
+      setCheckState('error');
+      setTimeout(() => setCheckState('idle'), 3000);
     }
-    setTimeout(() => setIsChecking(false), 1200);
   };
 
   const lastCheckedDate = versionInfo?.lastChecked
@@ -63,12 +90,40 @@ export function Footer({ versionInfo, onCheckUpdate }: FooterProps) {
           <button
             type="button"
             onClick={handleCheck}
-            disabled={isChecking}
+            disabled={checkState === 'checking'}
             aria-label="Check for updates"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-500/10 dark:bg-brand-500/20 hover:bg-brand-500/20 dark:hover:bg-brand-500/30 border border-brand-500/30 text-brand-700 dark:text-brand-300 transition-all active:scale-95 font-semibold text-[11px] shadow-sm disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-semibold text-[11px] shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${
+              checkState === 'up-to-date'
+                ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/40'
+                : checkState === 'error'
+                ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/40'
+                : 'bg-brand-500/10 dark:bg-brand-500/20 hover:bg-brand-500/20 dark:hover:bg-brand-500/30 border border-brand-500/30 text-brand-700 dark:text-brand-300'
+            }`}
           >
-            <RefreshCw className={`size-3 text-brand-600 dark:text-brand-400 ${isChecking ? 'animate-spin' : ''}`} />
-            <span>{isChecking ? 'Checking...' : 'Check Updates'}</span>
+            {checkState === 'checking' && (
+              <>
+                <RefreshCw className="size-3 text-brand-600 dark:text-brand-400 animate-spin" />
+                <span>Checking...</span>
+              </>
+            )}
+            {checkState === 'up-to-date' && (
+              <>
+                <CheckCircle2 className="size-3 text-emerald-600 dark:text-emerald-400" />
+                <span>Up to Date ✓</span>
+              </>
+            )}
+            {checkState === 'error' && (
+              <>
+                <AlertCircle className="size-3 text-amber-600 dark:text-amber-400" />
+                <span>Offline / Error</span>
+              </>
+            )}
+            {checkState === 'idle' && (
+              <>
+                <RefreshCw className="size-3 text-brand-600 dark:text-brand-400" />
+                <span>Check Updates</span>
+              </>
+            )}
           </button>
         </div>
       </div>

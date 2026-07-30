@@ -90,8 +90,18 @@ export function useFormularyData(options: UseFormularyDataOptions = {}) {
   }, [loadInitialSeed]);
 
   // Step 2: Background version sentinel check
-  const runVersionSentinel = useCallback(async () => {
-    if (!enableSentinel) return;
+  const runVersionSentinel = useCallback(async (): Promise<{
+    hasUpdate: boolean;
+    isOffline: boolean;
+    error: boolean;
+  }> => {
+    if (!enableSentinel) {
+      return { hasUpdate: false, isOffline: false, error: false };
+    }
+
+    if (!navigator.onLine) {
+      return { hasUpdate: false, isOffline: true, error: true };
+    }
 
     try {
       const localVer = versionInfo?.version ?? null;
@@ -100,9 +110,11 @@ export function useFormularyData(options: UseFormularyDataOptions = {}) {
       if (hasUpdate && remoteVersion) {
         setPendingVersion(remoteVersion);
         setIsDataUpdateAvailable(true);
+        return { hasUpdate: true, isOffline: false, error: false };
       }
+      return { hasUpdate: false, isOffline: false, error: false };
     } catch {
-      // Non-fatal background check
+      return { hasUpdate: false, isOffline: false, error: true };
     }
   }, [enableSentinel, syncService, versionInfo]);
 
