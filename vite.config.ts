@@ -14,6 +14,7 @@ const buildTime = now.toLocaleString('en-GB', {
 });
 
 export default defineConfig({
+  base: '/gemini-fupkdkl/',
   define: {
     __APP_BUILD_ID__: JSON.stringify(buildId),
     __APP_BUILD_TIME__: JSON.stringify(buildTime),
