@@ -13,7 +13,7 @@ export function InstallBanner({ isVisible, onInstall, onDismiss }: InstallBanner
     <div
       role="region"
       aria-label="Install App Banner"
-      className="fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:max-w-md z-40 p-4 bg-slate-900/95 dark:bg-slate-800/95 text-white backdrop-blur-md rounded-2xl border border-brand-500/30 shadow-2xl animate-in slide-in-from-bottom duration-300 flex items-center justify-between gap-4"
+      className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] left-4 right-4 md:left-auto md:right-6 md:max-w-md z-40 p-4 bg-slate-900/95 dark:bg-slate-800/95 text-white backdrop-blur-md rounded-2xl border border-brand-500/30 shadow-2xl animate-in slide-in-from-bottom duration-300 flex items-center justify-between gap-4"
     >
       <div className="flex items-center gap-3.5 min-w-0">
         <div className="p-2.5 bg-brand-500/20 text-brand-400 rounded-xl border border-brand-500/30 shrink-0">

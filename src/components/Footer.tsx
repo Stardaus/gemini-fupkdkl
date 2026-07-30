@@ -31,7 +31,7 @@ export function Footer({ versionInfo, onCheckUpdate }: FooterProps) {
     : null;
 
   return (
-    <footer className="mt-8 sm:mt-10 pt-6 pb-24 sm:pb-6 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+    <footer className="mt-8 sm:mt-10 pt-6 pb-[calc(7rem+env(safe-area-inset-bottom,0px))] sm:pb-8 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2 font-semibold text-slate-800 dark:text-slate-200">
