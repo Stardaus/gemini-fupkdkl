@@ -10,7 +10,7 @@ import { parseFormularyCSV } from '../services/csvParser';
 import { FormularySync, computeMedicationsHash } from '../services/formularySync';
 
 const INITIAL_VERSION = '2.0.0-initial';
-const INITIAL_CSV_PATH = '/data/formulary_initial.csv';
+const INITIAL_CSV_PATH = `${import.meta.env.BASE_URL}data/formulary_initial.csv`;
 
 export const DEFAULT_VERSION_URL =
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFA9lhUhdSk7L_t0XnGtGzrIMw1g9EXrNjmRfaBaQ8naqAy7ua8r_lpeth-LPQQS2pOMlKKSbvYQuB/pub?gid=411569782&single=true&output=csv';
