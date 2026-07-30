@@ -1,20 +1,18 @@
 import { useState, useEffect } from 'react';
-import { Pill, Sun, Moon, Wifi, WifiOff, RefreshCw, Download } from 'lucide-react';
+import { Pill, Sun, Moon, Wifi, WifiOff, Download } from 'lucide-react';
 import { Theme } from '../hooks/useTheme';
 
 export interface HeaderProps {
   theme: Theme;
   onToggleTheme: () => void;
-  onCheckUpdate?: () => void;
   isInstallable?: boolean;
   onInstallApp?: () => void;
 }
 
-export function Header({ theme, onToggleTheme, onCheckUpdate, isInstallable, onInstallApp }: HeaderProps) {
+export function Header({ theme, onToggleTheme, isInstallable, onInstallApp }: HeaderProps) {
   const [isOnline, setIsOnline] = useState<boolean>(
     typeof navigator !== 'undefined' ? navigator.onLine : true
   );
-  const [isChecking, setIsChecking] = useState<boolean>(false);
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -28,18 +26,6 @@ export function Header({ theme, onToggleTheme, onCheckUpdate, isInstallable, onI
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
-
-  const handleManualCheck = () => {
-    setIsChecking(true);
-    if (onCheckUpdate) {
-      onCheckUpdate();
-    }
-    const globalCheck = (window as unknown as { checkPWAUpdate?: () => void }).checkPWAUpdate;
-    if (globalCheck) {
-      globalCheck();
-    }
-    setTimeout(() => setIsChecking(false), 1200);
-  };
 
   return (
     <header className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800/80">
@@ -94,18 +80,6 @@ export function Header({ theme, onToggleTheme, onCheckUpdate, isInstallable, onI
             <span className="hidden md:inline text-xs font-bold">Install App</span>
           </button>
         )}
-
-        {/* Check for Updates Button */}
-        <button
-          type="button"
-          onClick={handleManualCheck}
-          disabled={isChecking}
-          aria-label="Check for app updates"
-          title="Check for app updates"
-          className="p-2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-300 rounded-xl transition-all active:scale-95 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
-        >
-          <RefreshCw className={`size-5 text-brand-500 ${isChecking ? 'animate-spin' : ''}`} />
-        </button>
 
         {/* Light / Dark Mode Toggle */}
         <button

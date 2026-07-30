@@ -109,7 +109,6 @@ export default function App() {
           <Header
             theme={theme}
             onToggleTheme={toggleTheme}
-            onCheckUpdate={refreshData}
             isInstallable={isInstallable}
             onInstallApp={promptInstall}
           />

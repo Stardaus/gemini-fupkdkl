@@ -26,15 +26,6 @@ describe('Header component', () => {
     expect(lightBtn).toBeInTheDocument();
   });
 
-  it('handles manual check update button click', () => {
-    const handleCheck = vi.fn();
-    render(<Header theme="dark" onToggleTheme={() => {}} onCheckUpdate={handleCheck} />);
-
-    const checkBtn = screen.getByRole('button', { name: /Check for app updates/i });
-    fireEvent.click(checkBtn);
-    expect(handleCheck).toHaveBeenCalledTimes(1);
-  });
-
   it('renders and handles Install App button when isInstallable is true', () => {
     const handleInstall = vi.fn();
     render(
