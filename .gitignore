@@ -1,5 +1,6 @@
 # Ignore all Markdown documentation
 *.md
+**/*.md
 
 # Dependencies
 node_modules/
