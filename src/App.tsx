@@ -3,6 +3,7 @@ import { useFormularyData } from './hooks/useFormularyData';
 import { useTheme } from './hooks/useTheme';
 import { useRecentMeds } from './hooks/useRecentMeds';
 import { useDisclaimer } from './hooks/useDisclaimer';
+import { usePWAInstall } from './hooks/usePWAInstall';
 import { FormularyQueryEngine } from './services/formularyQueryEngine';
 import { Medication, FilterCategory } from './types/formulary';
 
@@ -16,6 +17,8 @@ import { RecentMedications } from './components/RecentMedications';
 import { UpdateToast } from './components/UpdateToast';
 import { PWAUpdatePrompt } from './components/PWAUpdatePrompt';
 import { DataUpdatePrompt } from './components/DataUpdatePrompt';
+import { InstallBanner } from './components/InstallBanner';
+import { IOSInstallDialog } from './components/IOSInstallDialog';
 import { Footer } from './components/Footer';
 import { Loader2 } from 'lucide-react';
 
@@ -23,6 +26,14 @@ export default function App() {
   const { theme, toggleTheme } = useTheme();
   const { hasAccepted, acceptDisclaimer } = useDisclaimer();
   const { recentMeds, addRecentMed, clearRecentMeds } = useRecentMeds();
+  const {
+    isInstallable,
+    isBannerVisible,
+    isIOSModalOpen,
+    promptInstall,
+    dismissBanner,
+    closeIOSModal,
+  } = usePWAInstall();
 
   const {
     medications,
@@ -79,11 +90,26 @@ export default function App() {
         onDismiss={dismissDataUpdatePrompt}
       />
 
+      {/* PWA Install Banner */}
+      <InstallBanner
+        isVisible={isBannerVisible}
+        onInstall={promptInstall}
+        onDismiss={dismissBanner}
+      />
+
+      {/* iOS Safari Install Guide Dialog */}
+      <IOSInstallDialog
+        isOpen={isIOSModalOpen}
+        onClose={closeIOSModal}
+      />
+
       <main className="max-w-4xl mx-auto p-4 sm:p-6 space-y-5">
         <Header
           theme={theme}
           onToggleTheme={toggleTheme}
           onCheckUpdate={refreshData}
+          isInstallable={isInstallable}
+          onInstallApp={promptInstall}
         />
 
         {/* Disclaimer Dialog for first-time launch */}

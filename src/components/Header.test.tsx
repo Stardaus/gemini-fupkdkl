@@ -34,4 +34,21 @@ describe('Header component', () => {
     fireEvent.click(checkBtn);
     expect(handleCheck).toHaveBeenCalledTimes(1);
   });
+
+  it('renders and handles Install App button when isInstallable is true', () => {
+    const handleInstall = vi.fn();
+    render(
+      <Header
+        theme="dark"
+        onToggleTheme={() => {}}
+        isInstallable={true}
+        onInstallApp={handleInstall}
+      />
+    );
+
+    const installBtn = screen.getByRole('button', { name: /Install Formulary App/i });
+    expect(installBtn).toBeInTheDocument();
+    fireEvent.click(installBtn);
+    expect(handleInstall).toHaveBeenCalledTimes(1);
+  });
 });

@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Pill, Sun, Moon, Wifi, WifiOff, RefreshCw } from 'lucide-react';
+import { Pill, Sun, Moon, Wifi, WifiOff, RefreshCw, Download } from 'lucide-react';
 import { Theme } from '../hooks/useTheme';
 
 export interface HeaderProps {
   theme: Theme;
   onToggleTheme: () => void;
   onCheckUpdate?: () => void;
+  isInstallable?: boolean;
+  onInstallApp?: () => void;
 }
 
-export function Header({ theme, onToggleTheme, onCheckUpdate }: HeaderProps) {
+export function Header({ theme, onToggleTheme, onCheckUpdate, isInstallable, onInstallApp }: HeaderProps) {
   const [isOnline, setIsOnline] = useState<boolean>(
     typeof navigator !== 'undefined' ? navigator.onLine : true
   );
@@ -78,6 +80,20 @@ export function Header({ theme, onToggleTheme, onCheckUpdate }: HeaderProps) {
             </>
           )}
         </span>
+
+        {/* Install App Button */}
+        {isInstallable && (
+          <button
+            type="button"
+            onClick={onInstallApp}
+            aria-label="Install Formulary App"
+            title="Install Formulary App"
+            className="p-2 bg-brand-500/10 dark:bg-brand-500/20 hover:bg-brand-500/20 dark:hover:bg-brand-500/30 border border-brand-500/30 text-brand-700 dark:text-brand-300 rounded-xl transition-all active:scale-95 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer flex items-center gap-1.5"
+          >
+            <Download className="size-5 text-brand-600 dark:text-brand-400" />
+            <span className="hidden md:inline text-xs font-bold">Install App</span>
+          </button>
+        )}
 
         {/* Check for Updates Button */}
         <button
