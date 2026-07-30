@@ -43,7 +43,7 @@ export function VirtualMedList({
       ref={parentRef}
       role="region"
       aria-label="Medication list"
-      className="h-[50vh] sm:h-[60vh] min-h-[320px] sm:min-h-[400px] max-h-[600px] overflow-y-auto pr-1 space-y-2 rounded-xl focus:outline-none"
+      className="flex-1 min-h-0 w-full overflow-y-auto sm:h-[60vh] sm:min-h-[400px] sm:max-h-[600px] pr-1 space-y-2 rounded-xl focus:outline-none"
     >
       <div
         className="w-full relative"

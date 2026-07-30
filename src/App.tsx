@@ -78,7 +78,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans selection:bg-brand-500 selection:text-white transition-colors duration-200">
+    <div className="h-dvh max-h-dvh overflow-hidden flex flex-col pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)] sm:h-auto sm:max-h-none sm:overflow-visible min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans selection:bg-brand-500 selection:text-white transition-colors duration-200">
       {/* PWA App Shell Code Update Banner */}
       <PWAUpdatePrompt />
 
@@ -103,41 +103,44 @@ export default function App() {
         onClose={closeIOSModal}
       />
 
-      <main className="max-w-4xl mx-auto p-4 sm:p-6 pb-12 sm:pb-6 space-y-5">
-        <Header
-          theme={theme}
-          onToggleTheme={toggleTheme}
-          onCheckUpdate={refreshData}
-          isInstallable={isInstallable}
-          onInstallApp={promptInstall}
-        />
-
-        {/* Disclaimer Dialog for first-time launch */}
-        <DisclaimerDialog
-          isOpen={!hasAccepted}
-          onAccept={acceptDisclaimer}
-        />
-
-        {/* Hero Section: Recent Lookups */}
-        <RecentMedications
-          recentMeds={recentMeds}
-          onSelectMedication={handleSelectMedication}
-          onClearRecent={clearRecentMeds}
-        />
-
-        {/* Search Controls */}
-        <div className="space-y-3">
-          <SearchBar
-            value={searchQuery}
-            onChange={setSearchQuery}
-            onClear={() => setSearchQuery('')}
+      <main className="flex-1 flex flex-col min-h-0 max-w-4xl w-full mx-auto p-3.5 sm:p-6 space-y-3 sm:space-y-5">
+        {/* Top Controls Container */}
+        <div className="shrink-0 space-y-2.5 sm:space-y-3">
+          <Header
+            theme={theme}
+            onToggleTheme={toggleTheme}
+            onCheckUpdate={refreshData}
+            isInstallable={isInstallable}
+            onInstallApp={promptInstall}
           />
-          <QuickFilters
-            activeFilter={activeFilter}
-            onSelectFilter={setActiveFilter}
-            totalCount={medications.length}
-            quotaCount={quotaCount}
+
+          {/* Disclaimer Dialog for first-time launch */}
+          <DisclaimerDialog
+            isOpen={!hasAccepted}
+            onAccept={acceptDisclaimer}
           />
+
+          {/* Hero Section: Recent Lookups */}
+          <RecentMedications
+            recentMeds={recentMeds}
+            onSelectMedication={handleSelectMedication}
+            onClearRecent={clearRecentMeds}
+          />
+
+          {/* Search Controls */}
+          <div className="space-y-2.5 sm:space-y-3">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              onClear={() => setSearchQuery('')}
+            />
+            <QuickFilters
+              activeFilter={activeFilter}
+              onSelectFilter={setActiveFilter}
+              totalCount={medications.length}
+              quotaCount={quotaCount}
+            />
+          </div>
         </div>
 
         {/* Medication List or Loading Indicator */}
