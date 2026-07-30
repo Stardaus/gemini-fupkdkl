@@ -1,0 +1,110 @@
+import { useState, useEffect } from 'react';
+import { Pill, Sun, Moon, Wifi, WifiOff, RefreshCw } from 'lucide-react';
+import { Theme } from '../hooks/useTheme';
+
+export interface HeaderProps {
+  theme: Theme;
+  onToggleTheme: () => void;
+  onCheckUpdate?: () => void;
+}
+
+export function Header({ theme, onToggleTheme, onCheckUpdate }: HeaderProps) {
+  const [isOnline, setIsOnline] = useState<boolean>(
+    typeof navigator !== 'undefined' ? navigator.onLine : true
+  );
+  const [isChecking, setIsChecking] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  const handleManualCheck = () => {
+    setIsChecking(true);
+    if (onCheckUpdate) {
+      onCheckUpdate();
+    }
+    const globalCheck = (window as unknown as { checkPWAUpdate?: () => void }).checkPWAUpdate;
+    if (globalCheck) {
+      globalCheck();
+    }
+    setTimeout(() => setIsChecking(false), 1200);
+  };
+
+  return (
+    <header className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800/80">
+      <div className="flex items-center gap-3.5">
+        <div className="p-3 bg-brand-500/10 dark:bg-brand-500/15 text-brand-600 dark:text-brand-400 rounded-2xl border border-brand-500/25 shadow-sm shrink-0">
+          <Pill className="size-6 sm:size-7" />
+        </div>
+        <div>
+          <h1 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-slate-100 text-balance tracking-tight">
+            District Drug Formulary <span className="text-brand-600 dark:text-brand-400">PKD Kuala Langat</span>
+          </h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+            Pejabat Kesihatan Daerah Kuala Langat
+          </p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2.5">
+        {/* Offline / Online Status Indicator */}
+        <span
+          aria-label={isOnline ? 'Online' : 'Offline'}
+          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border shadow-sm transition-colors ${
+            isOnline
+              ? 'bg-brand-500/10 text-brand-700 dark:text-brand-300 border-brand-500/25'
+              : 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/25'
+          }`}
+        >
+          <span className={`size-2 rounded-full ${isOnline ? 'bg-brand-500 animate-pulse' : 'bg-amber-500'}`} />
+          {isOnline ? (
+            <>
+              <Wifi className="size-3.5 text-brand-600 dark:text-brand-400" />
+              <span className="hidden sm:inline">Online</span>
+            </>
+          ) : (
+            <>
+              <WifiOff className="size-3.5 text-amber-600 dark:text-amber-400" />
+              <span>Offline</span>
+            </>
+          )}
+        </span>
+
+        {/* Check for Updates Button */}
+        <button
+          type="button"
+          onClick={handleManualCheck}
+          disabled={isChecking}
+          aria-label="Check for app updates"
+          title="Check for app updates"
+          className="p-2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-300 rounded-xl transition-all active:scale-95 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+        >
+          <RefreshCw className={`size-5 text-brand-500 ${isChecking ? 'animate-spin' : ''}`} />
+        </button>
+
+        {/* Light / Dark Mode Toggle */}
+        <button
+          type="button"
+          onClick={onToggleTheme}
+          aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          className="p-2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-300 rounded-xl transition-all active:scale-95 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
+        >
+          {theme === 'dark' ? (
+            <Sun className="size-5 text-amber-500" />
+          ) : (
+            <Moon className="size-5 text-indigo-500" />
+          )}
+        </button>
+      </div>
+    </header>
+  );
+}
