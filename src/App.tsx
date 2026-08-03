@@ -144,9 +144,18 @@ export default function App() {
 
         {/* Medication List or Loading Indicator */}
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center p-16 space-y-3 text-slate-400">
-            <Loader2 className="w-8 h-8 animate-spin text-teal-400" />
-            <p className="text-sm font-medium">Loading formulary data...</p>
+          <div className="flex flex-col items-center justify-center py-12 px-4 space-y-4 text-center">
+            <div className="relative">
+              <img
+                src="/splash-screen.png"
+                alt="FUPKDKL Digital Formulary Splash Screen"
+                className="w-44 sm:w-52 h-auto object-contain rounded-2xl shadow-xl border border-brand-500/20 dark:border-brand-500/30"
+              />
+            </div>
+            <div className="flex items-center gap-2 text-brand-600 dark:text-brand-400 font-semibold text-sm">
+              <Loader2 className="size-4 animate-spin" />
+              <span>Loading clinical formulary database...</span>
+            </div>
           </div>
         ) : (
           <VirtualMedList

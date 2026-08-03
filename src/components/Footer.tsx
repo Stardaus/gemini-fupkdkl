@@ -62,6 +62,11 @@ export function Footer({ versionInfo, onCheckUpdate }: FooterProps) {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2 font-semibold text-slate-800 dark:text-slate-200">
+            <img
+              src="/icon-192.png"
+              alt="Logo"
+              className="size-4 rounded object-contain inline-block"
+            />
             <span>District Drug Formulary PKD Kuala Langat</span>
           </div>
           <p className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">

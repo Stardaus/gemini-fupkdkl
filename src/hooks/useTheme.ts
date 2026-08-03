@@ -21,6 +21,11 @@ export function useTheme() {
       root.classList.add('light');
     }
     localStorage.setItem(THEME_KEY, theme);
+
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+      metaTheme.setAttribute('content', theme === 'dark' ? '#0f172a' : '#f8fafc');
+    }
   }, [theme]);
 
   const toggleTheme = useCallback(() => {

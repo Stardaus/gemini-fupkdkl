@@ -1,4 +1,4 @@
-import { Share, PlusSquare, X, Smartphone } from 'lucide-react';
+import { Share, PlusSquare, X } from 'lucide-react';
 
 export interface IOSInstallDialogProps {
   isOpen: boolean;
@@ -27,9 +27,13 @@ export function IOSInstallDialog({ isOpen, onClose }: IOSInstallDialogProps) {
         </button>
 
         {/* Dialog Header */}
-        <div className="flex items-center gap-3">
-          <div className="p-3 bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 rounded-2xl border border-brand-500/20 shrink-0">
-            <Smartphone className="size-6" />
+        <div className="flex items-center gap-3.5">
+          <div className="p-1 bg-brand-500/10 dark:bg-brand-500/20 rounded-2xl border border-brand-500/25 shrink-0 overflow-hidden flex items-center justify-center shadow-sm">
+            <img
+              src="/apple-touch-icon.png"
+              alt="Formulary App Icon"
+              className="size-11 rounded-xl object-contain"
+            />
           </div>
           <div>
             <h2 id="ios-install-title" className="text-lg font-bold tracking-tight">

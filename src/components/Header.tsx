@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Pill, Sun, Moon, Wifi, WifiOff, Download } from 'lucide-react';
+import { Sun, Moon, Wifi, WifiOff, Download } from 'lucide-react';
 import { Theme } from '../hooks/useTheme';
 
 export interface HeaderProps {
@@ -30,8 +30,12 @@ export function Header({ theme, onToggleTheme, isInstallable, onInstallApp }: He
   return (
     <header className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800/80">
       <div className="flex items-center gap-3.5">
-        <div className="p-3 bg-brand-500/10 dark:bg-brand-500/15 text-brand-600 dark:text-brand-400 rounded-2xl border border-brand-500/25 shadow-sm shrink-0">
-          <Pill className="size-6 sm:size-7" />
+        <div className="p-1 bg-brand-500/10 dark:bg-brand-500/15 rounded-2xl border border-brand-500/25 shadow-sm shrink-0 overflow-hidden flex items-center justify-center">
+          <img
+            src="/icon-192.png"
+            alt="PKDKL Formulary Logo"
+            className="size-9 sm:size-10 object-contain rounded-xl"
+          />
         </div>
         <div>
           <h1 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-slate-100 text-balance tracking-tight">
