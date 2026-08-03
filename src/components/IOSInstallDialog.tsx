@@ -30,7 +30,7 @@ export function IOSInstallDialog({ isOpen, onClose }: IOSInstallDialogProps) {
         <div className="flex items-center gap-3.5">
           <div className="p-1 bg-brand-500/10 dark:bg-brand-500/20 rounded-2xl border border-brand-500/25 shrink-0 overflow-hidden flex items-center justify-center shadow-sm">
             <img
-              src="/apple-touch-icon.png"
+              src={`${import.meta.env.BASE_URL}apple-touch-icon.png`}
               alt="Formulary App Icon"
               className="size-11 rounded-xl object-contain"
             />

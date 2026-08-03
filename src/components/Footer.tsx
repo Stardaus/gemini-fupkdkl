@@ -63,7 +63,7 @@ export function Footer({ versionInfo, onCheckUpdate }: FooterProps) {
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2 font-semibold text-slate-800 dark:text-slate-200">
             <img
-              src="/icon-192.png"
+              src={`${import.meta.env.BASE_URL}icon-192.png`}
               alt="Logo"
               className="size-4 rounded object-contain inline-block"
             />

@@ -32,7 +32,7 @@ export function Header({ theme, onToggleTheme, isInstallable, onInstallApp }: He
       <div className="flex items-center gap-3.5">
         <div className="p-1 bg-brand-500/10 dark:bg-brand-500/15 rounded-2xl border border-brand-500/25 shadow-sm shrink-0 overflow-hidden flex items-center justify-center">
           <img
-            src="/icon-192.png"
+            src={`${import.meta.env.BASE_URL}icon-192.png`}
             alt="PKDKL Formulary Logo"
             className="size-9 sm:size-10 object-contain rounded-xl"
           />

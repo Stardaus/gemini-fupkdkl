@@ -147,7 +147,7 @@ export default function App() {
           <div className="flex flex-col items-center justify-center py-12 px-4 space-y-4 text-center">
             <div className="relative">
               <img
-                src="/splash-screen.png"
+                src={`${import.meta.env.BASE_URL}splash-screen.png`}
                 alt="FUPKDKL Digital Formulary Splash Screen"
                 className="w-44 sm:w-52 h-auto object-contain rounded-2xl shadow-xl border border-brand-500/20 dark:border-brand-500/30"
               />
