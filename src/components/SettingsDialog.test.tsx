@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { SettingsDialog } from './SettingsDialog';
 
@@ -19,12 +19,11 @@ describe('SettingsDialog component', () => {
         onToggleTheme={() => {}}
       />
     );
-    // Dialog element shouldn't be open
     const dialog = container.querySelector('dialog');
     expect(dialog?.open).toBeFalsy();
   });
 
-  it('renders version info, build ID, and triggers update check when opened', () => {
+  it('renders version info, build ID, and handles theme/close actions', () => {
     const handleClose = vi.fn();
     const handleCheckUpdate = vi.fn();
     const handleToggleTheme = vi.fn();
@@ -43,11 +42,6 @@ describe('SettingsDialog component', () => {
     expect(screen.getByRole('heading', { name: /Settings & System Information/i })).toBeInTheDocument();
     expect(screen.getByText(/v2.0.0/i)).toBeInTheDocument();
 
-    // Check updates button
-    const checkBtn = screen.getByRole('button', { name: /Check for updates/i });
-    fireEvent.click(checkBtn);
-    expect(handleCheckUpdate).toHaveBeenCalledTimes(1);
-
     // Toggle theme button
     const themeBtn = screen.getByRole('button', { name: /Switch to dark theme/i });
     fireEvent.click(themeBtn);
@@ -57,5 +51,96 @@ describe('SettingsDialog component', () => {
     const closeBtn = screen.getByRole('button', { name: /Close settings/i });
     fireEvent.click(closeBtn);
     expect(handleClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('handles update check success feedback (Up to Date)', async () => {
+    const handleCheckUpdate = vi.fn().mockResolvedValue({ hasUpdate: false });
+
+    render(
+      <SettingsDialog
+        isOpen={true}
+        onClose={() => {}}
+        versionInfo={mockVersionInfo}
+        onCheckUpdate={handleCheckUpdate}
+        theme="dark"
+        onToggleTheme={() => {}}
+      />
+    );
+
+    const checkBtn = screen.getByRole('button', { name: /Check for updates/i });
+
+    await act(async () => {
+      fireEvent.click(checkBtn);
+    });
+
+    expect(handleCheckUpdate).toHaveBeenCalledTimes(1);
+    expect(screen.getByText(/Up to Date ✓/i)).toBeInTheDocument();
+  });
+
+  it('handles update check error feedback', async () => {
+    const handleCheckUpdate = vi.fn().mockResolvedValue({ error: true });
+
+    render(
+      <SettingsDialog
+        isOpen={true}
+        onClose={() => {}}
+        versionInfo={null}
+        onCheckUpdate={handleCheckUpdate}
+        theme="dark"
+        onToggleTheme={() => {}}
+      />
+    );
+
+    const checkBtn = screen.getByRole('button', { name: /Check for updates/i });
+
+    await act(async () => {
+      fireEvent.click(checkBtn);
+    });
+
+    expect(handleCheckUpdate).toHaveBeenCalledTimes(1);
+    expect(screen.getByText(/Offline \/ Error/i)).toBeInTheDocument();
+  });
+
+  it('handles update check exception gracefully', async () => {
+    const handleCheckUpdate = vi.fn().mockRejectedValue(new Error('Network error'));
+
+    render(
+      <SettingsDialog
+        isOpen={true}
+        onClose={() => {}}
+        versionInfo={null}
+        onCheckUpdate={handleCheckUpdate}
+        theme="light"
+        onToggleTheme={() => {}}
+      />
+    );
+
+    const checkBtn = screen.getByRole('button', { name: /Check for updates/i });
+
+    await act(async () => {
+      fireEvent.click(checkBtn);
+    });
+
+    expect(screen.getByText(/Offline \/ Error/i)).toBeInTheDocument();
+  });
+
+  it('handles backdrop click to trigger onClose', () => {
+    const handleClose = vi.fn();
+    const { container } = render(
+      <SettingsDialog
+        isOpen={true}
+        onClose={handleClose}
+        versionInfo={mockVersionInfo}
+        onCheckUpdate={() => {}}
+        theme="light"
+        onToggleTheme={() => {}}
+      />
+    );
+
+    const dialog = container.querySelector('dialog');
+    if (dialog) {
+      fireEvent.click(dialog);
+      expect(handleClose).toHaveBeenCalled();
+    }
   });
 });
