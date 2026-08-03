@@ -24,7 +24,14 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'prompt',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'fonts/*.woff2'],
+      includeAssets: [
+        'favicon.ico',
+        'favicon-32x32.png',
+        'favicon-16x16.png',
+        'apple-touch-icon.png',
+        'splash-screen.png',
+        'fonts/*.woff2',
+      ],
       manifest: {
         name: 'District Drug Formulary — PKD Kuala Langat',
         short_name: 'Formulary PKDKL',
