@@ -119,15 +119,8 @@ export default function App() {
             onAccept={acceptDisclaimer}
           />
 
-          {/* Hero Section: Recent Lookups */}
-          <RecentMedications
-            recentMeds={recentMeds}
-            onSelectMedication={handleSelectMedication}
-            onClearRecent={clearRecentMeds}
-          />
-
-          {/* Search Controls */}
-          <div className="space-y-2.5 sm:space-y-3">
+          {/* Hero Search Controls */}
+          <div className="space-y-2.5 sm:space-y-3 pt-1">
             <SearchBar
               value={searchQuery}
               onChange={setSearchQuery}
@@ -140,6 +133,13 @@ export default function App() {
               quotaCount={quotaCount}
             />
           </div>
+
+          {/* Secondary Quick Access: Recent Lookups */}
+          <RecentMedications
+            recentMeds={recentMeds}
+            onSelectMedication={handleSelectMedication}
+            onClearRecent={clearRecentMeds}
+          />
         </div>
 
         {/* Medication List or Loading Indicator */}

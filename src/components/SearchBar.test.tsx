@@ -15,7 +15,7 @@ describe('SearchBar component', () => {
       />
     );
 
-    const input = screen.getByRole('textbox', { name: /Search medications/i });
+    const input = screen.getByRole('searchbox', { name: /Search medications/i });
     expect(input).toHaveValue('amlodipine');
 
     fireEvent.change(input, { target: { value: 'metformin' } });

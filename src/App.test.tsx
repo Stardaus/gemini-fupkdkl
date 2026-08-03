@@ -78,7 +78,7 @@ describe('Formulari App integration', () => {
     expect(screen.getAllByText(/Build:/i).length).toBeGreaterThan(0);
 
     // 3. Search execution
-    const searchInput = screen.getByRole('textbox', { name: /Search medications/i });
+    const searchInput = screen.getByRole('searchbox', { name: /Search medications/i });
     fireEvent.change(searchInput, { target: { value: 'Amlodipine' } });
 
     await waitFor(() => {
@@ -86,7 +86,7 @@ describe('Formulari App integration', () => {
     });
 
     // 4. Clear search
-    const clearSearchBtn = screen.getByRole('button', { name: /Clear search/i });
+    const clearSearchBtn = screen.getByRole('button', { name: /Clear search query/i });
     fireEvent.click(clearSearchBtn);
 
     // 5. Quick filter toggle with Quota Drugs label

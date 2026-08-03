@@ -72,27 +72,24 @@ Set entirely in self-hosted Inter variable font with strict readable hierarchy:
 - **Body & Clinical Descriptions:** `text-pretty` for natural multi-line line breaks across dosage, contraindications, and clinical indications.
 - **Codes & Metadata:** `font-mono` with `tabular-nums` for MDC numbers, MAL registration codes, build hashes, and filter counts.
 
-## Layout
+## Layout & Visual Hierarchy
 
-Dynamic 100% viewport container bounded at `max-w-4xl` centered layout. List windowing utilizes `@tanstack/react-virtual` with dynamic DOM element height measurement (`measureElement`) to guarantee smooth 60fps scrolling without card overlap or irregular vertical gaps.
+Dynamic 100% viewport container bounded at `max-w-4xl` centered layout.
+- **Hero Focal Level 1 (Search Box):** Positioned immediately below the header with elevated visual styling (shadow-md/xl, glowing brand border focus ring, `type="search"`, `role="search"`, and desktop `Cmd+K` / `/` shortcut badges).
+- **Filter Controls (Level 2):** High-contrast category filter chips immediately below search with `min-h-[44px]` touch targets.
+- **Quick History (Level 3):** De-emphasized horizontal scrolling chip strip for recent medication searches.
+- **Medication List (Level 4):** Windowed list utilizing `@tanstack/react-virtual` with dynamic DOM element height measurement (`measureElement`) for 60fps scrolling.
 
-## Elevation & Depth
+## Accessibility & WCAG 2.2 Compliance
 
-Visual hierarchy is maintained via crisp borders (`border-slate-200`/`border-slate-700`), subtle shadows (`shadow-sm`), and translucent glassmorphic panel backdrops (`backdrop-blur-md`) rather than heavy drop shadows.
-
-## Shapes
-
-All containers, input fields, cards, and modal dialogs utilize a unified `12px` (`rounded-xl` / `rounded-2xl`) corner radius. Status badges and pill buttons use full circular rounding (`rounded-full`).
-
-## Components
-
-- **Buttons:** Tactile `active:scale-95` press feedback with `disabled:opacity-60` protection and spinning refresh state during asynchronous operations.
-- **Modal Dialogs:** Native HTML5 `<dialog>` elements with backdrop blur overlays, focus trapping, scroll locking, and Escape key handling.
-- **Cards:** Accessible focus rings (`focus:ring-brand-500`), single-line header title truncation, and clear metadata tags.
+- **Focus Appearance (2.4.13):** Explicit high-contrast focus rings (`focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900`) across all interactive controls.
+- **Target Size Minimum (2.5.8):** All interactive buttons, inputs, chips, and close controls enforce minimum 44px touch target bounds (`min-h-[44px]`).
+- **Accessible Names (4.1.2):** Every form control and icon-only button provides explicit `<label>` or `aria-label` definitions with `aria-hidden="true"` on decorative icons.
+- **Keyboard Navigation:** Full keyboard support including `/` and `Cmd+K` / `Ctrl+K` to jump to search, `Escape` to close dialogs, and native `<button>` element semantics for all cards and chips.
 
 ## Do's and Don'ts
 
 - Do use `--color-brand-*` tokens for all primary actions, active filter states, and focus rings.
-- Don't hardcode static dark slate background classes without paired `dark:` light mode variants.
-- Do use `tabular-nums` for numerical data, MDC codes, and MAL numbers.
-- Don't combine `text-balance` with single-line `truncate` heading elements.
+- Don't use `<div>` or `<span>` as clickable elements; use native `<button>` or `<a>` elements with proper `type` attributes.
+- Do enforce `min-h-[44px]` touch target boundaries on all interactive elements per WCAG 2.2.
+- Don't remove focus outlines without providing a visible `focus-visible:ring-2` replacement.

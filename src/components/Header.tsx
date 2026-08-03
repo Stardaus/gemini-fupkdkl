@@ -78,9 +78,9 @@ export function Header({ theme, onToggleTheme, isInstallable, onInstallApp }: He
             onClick={onInstallApp}
             aria-label="Install Formulary App"
             title="Install Formulary App"
-            className="p-2 bg-brand-500/10 dark:bg-brand-500/20 hover:bg-brand-500/20 dark:hover:bg-brand-500/30 border border-brand-500/30 text-brand-700 dark:text-brand-300 rounded-xl transition-all active:scale-95 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer flex items-center gap-1.5"
+            className="min-h-[44px] px-3 py-2 bg-brand-500/10 dark:bg-brand-500/20 hover:bg-brand-500/20 dark:hover:bg-brand-500/30 border border-brand-500/30 text-brand-700 dark:text-brand-300 rounded-xl transition-all active:scale-95 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 cursor-pointer flex items-center gap-1.5"
           >
-            <Download className="size-5 text-brand-600 dark:text-brand-400" />
+            <Download className="size-5 text-brand-600 dark:text-brand-400" aria-hidden="true" />
             <span className="hidden md:inline text-xs font-bold">Install App</span>
           </button>
         )}
@@ -90,12 +90,12 @@ export function Header({ theme, onToggleTheme, isInstallable, onInstallApp }: He
           type="button"
           onClick={onToggleTheme}
           aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-          className="p-2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-300 rounded-xl transition-all active:scale-95 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
+          className="min-h-[44px] min-w-[44px] p-2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-300 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-300 rounded-xl transition-all active:scale-95 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 cursor-pointer flex items-center justify-center"
         >
           {theme === 'dark' ? (
-            <Sun className="size-5 text-amber-500" />
+            <Sun className="size-5 text-amber-500" aria-hidden="true" />
           ) : (
-            <Moon className="size-5 text-indigo-500" />
+            <Moon className="size-5 text-indigo-500" aria-hidden="true" />
           )}
         </button>
       </div>
