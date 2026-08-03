@@ -75,7 +75,14 @@ describe('Formulari App integration', () => {
 
     // 2. Title rendering
     expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
-    expect(screen.getAllByText(/Build:/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Pejabat Kesihatan Daerah Kuala Langat/i).length).toBeGreaterThan(0);
+
+    // Open settings to verify Build ID
+    const settingsBtn = screen.getByRole('button', { name: /Open Settings/i });
+    fireEvent.click(settingsBtn);
+    expect(screen.getByText(/App Build ID/i)).toBeInTheDocument();
+    const closeSettingsBtn = screen.getByRole('button', { name: /Close settings/i });
+    fireEvent.click(closeSettingsBtn);
 
     // 3. Search execution
     const searchInput = screen.getByRole('searchbox', { name: /Search medications/i });

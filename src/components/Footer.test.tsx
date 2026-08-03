@@ -1,36 +1,23 @@
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Footer } from './Footer';
 
 describe('Footer component', () => {
-  it('renders app build version, data version, and organization details', () => {
-    render(
-      <Footer
-        versionInfo={{ version: '1785409094', lastChecked: Date.now() }}
-        onCheckUpdate={() => {}}
-      />
-    );
+  it('renders copyright and organization details in minimal layout', () => {
+    render(<Footer />);
 
-    expect(screen.getByText(/District Drug Formulary PKD Kuala Langat/i)).toBeInTheDocument();
-    expect(screen.getByText(/Build:/i)).toBeInTheDocument();
-    expect(screen.getByText(/Data: v1785409094/i)).toBeInTheDocument();
     expect(screen.getByText(/Pejabat Kesihatan Daerah Kuala Langat/i)).toBeInTheDocument();
+    expect(screen.getByText(/Official Clinical Reference Guide/i)).toBeInTheDocument();
   });
 
-  it('handles manual check update click with async feedback', async () => {
-    const handleCheck = vi.fn().mockResolvedValue({ hasUpdate: false });
-    render(
-      <Footer
-        versionInfo={null}
-        onCheckUpdate={handleCheck}
-      />
-    );
+  it('handles settings button click when onOpenSettings is provided', () => {
+    const handleOpenSettings = vi.fn();
+    render(<Footer onOpenSettings={handleOpenSettings} />);
 
-    const checkBtn = screen.getByRole('button', { name: /Check for updates/i });
-    await act(async () => {
-      fireEvent.click(checkBtn);
-    });
-    expect(handleCheck).toHaveBeenCalledTimes(1);
-    expect(screen.getByText(/Up to Date ✓/i)).toBeInTheDocument();
+    const settingsBtn = screen.getByRole('button', { name: /Settings & Info/i });
+    expect(settingsBtn).toBeInTheDocument();
+
+    fireEvent.click(settingsBtn);
+    expect(handleOpenSettings).toHaveBeenCalledTimes(1);
   });
 });

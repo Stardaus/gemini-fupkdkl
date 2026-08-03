@@ -19,6 +19,7 @@ import { DataUpdatePrompt } from './components/DataUpdatePrompt';
 import { InstallBanner } from './components/InstallBanner';
 import { IOSInstallDialog } from './components/IOSInstallDialog';
 import { Footer } from './components/Footer';
+import { SettingsDialog } from './components/SettingsDialog';
 import { Loader2 } from 'lucide-react';
 
 export default function App() {
@@ -51,6 +52,7 @@ export default function App() {
   const [activeFilter, setActiveFilter] = useState<FilterCategory>('ALL');
   const [selectedMedication, setSelectedMedication] =
     useState<Medication | null>(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
   // Pure domain query engine memoized against medications array
   const queryEngine = useMemo(
@@ -110,6 +112,7 @@ export default function App() {
             onToggleTheme={toggleTheme}
             isInstallable={isInstallable}
             onInstallApp={promptInstall}
+            onOpenSettings={() => setIsSettingsOpen(true)}
           />
 
           {/* Disclaimer Dialog for first-time launch */}
@@ -166,6 +169,16 @@ export default function App() {
           onClose={handleCloseDialog}
         />
 
+        {/* System & Settings Dialog */}
+        <SettingsDialog
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          versionInfo={versionInfo}
+          onCheckUpdate={refreshData}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+        />
+
         {/* Data Update Completion Toast */}
         <UpdateToast
           isVisible={isSuccessToastVisible}
@@ -173,8 +186,8 @@ export default function App() {
           onDismiss={dismissSuccessToast}
         />
 
-        {/* Footnote displaying App Build version & Data Version */}
-        <Footer versionInfo={versionInfo} onCheckUpdate={refreshData} />
+        {/* Minimal Footnote */}
+        <Footer onOpenSettings={() => setIsSettingsOpen(true)} />
       </main>
     </div>
   );

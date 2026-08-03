@@ -42,4 +42,20 @@ describe('Header component', () => {
     fireEvent.click(installBtn);
     expect(handleInstall).toHaveBeenCalledTimes(1);
   });
+
+  it('renders and handles Settings button when onOpenSettings is provided', () => {
+    const handleOpenSettings = vi.fn();
+    render(
+      <Header
+        theme="dark"
+        onToggleTheme={() => {}}
+        onOpenSettings={handleOpenSettings}
+      />
+    );
+
+    const settingsBtn = screen.getByRole('button', { name: /Open Settings/i });
+    expect(settingsBtn).toBeInTheDocument();
+    fireEvent.click(settingsBtn);
+    expect(handleOpenSettings).toHaveBeenCalledTimes(1);
+  });
 });
