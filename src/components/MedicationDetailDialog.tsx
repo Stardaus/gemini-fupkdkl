@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { Medication } from '../types/formulary';
 import { Quest3Link } from './Quest3Link';
+import { isNoneRestriction } from '../utils/restrictionUtils';
 
 export interface MedicationDetailDialogProps {
   medication: Medication | null;
@@ -183,13 +184,21 @@ export function MedicationDetailDialog({
 
         {prescribingRestrictions && (
           <div className="space-y-1.5">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-              <ShieldAlert className="size-4 text-amber-500" />
-              Prescribing Restrictions / Quota Control
-            </h3>
-            <div className="bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-xl p-3.5">
-              <p className="text-amber-900 dark:text-amber-200 text-pretty leading-relaxed font-medium">{prescribingRestrictions}</p>
-            </div>
+            {isQuota || !isNoneRestriction(prescribingRestrictions) ? (
+              <>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                  <ShieldAlert className="size-4 text-amber-500" />
+                  Prescribing Restrictions / Quota Control
+                </h3>
+                <div className="bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-xl p-3.5">
+                  <p className="text-amber-900 dark:text-amber-200 text-pretty leading-relaxed font-medium">{prescribingRestrictions}</p>
+                </div>
+              </>
+            ) : (
+              <Section title="Prescribing Restrictions" icon={<Info className="size-4 text-slate-400" />}>
+                <p className="text-slate-800 dark:text-slate-200 text-pretty leading-relaxed">{prescribingRestrictions}</p>
+              </Section>
+            )}
           </div>
         )}
 
