@@ -77,7 +77,7 @@ Set entirely in self-hosted Inter variable font with strict readable hierarchy:
 Dynamic 100% viewport container bounded at `max-w-4xl` centered layout.
 - **Hero Focal Level 1 (Search Box):** Positioned immediately below the header with elevated visual styling (shadow-md/xl, glowing brand border focus ring, `type="search"`, `role="search"`, and desktop `Cmd+K` / `/` shortcut badges).
 - **Filter Controls (Level 2):** High-contrast category filter chips immediately below search with `min-h-[44px]` touch targets.
-- **Quick History (Level 3):** De-emphasized horizontal scrolling chip strip for recent medication searches.
+- **Quick History (Level 3):** Contextual dropdown panel for recent searches that appears organically when the Search Input is focused and empty, avoiding persistent visual clutter.
 - **Medication List (Level 4):** Windowed list utilizing `@tanstack/react-virtual` with dynamic DOM element height measurement (`measureElement`) for 60fps scrolling.
 
 ## Accessibility & WCAG 2.2 Compliance

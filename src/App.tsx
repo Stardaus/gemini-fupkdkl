@@ -13,7 +13,6 @@ import { QuickFilters } from './components/QuickFilters';
 import { VirtualMedList } from './components/VirtualMedList';
 import { MedicationDetailDialog } from './components/MedicationDetailDialog';
 import { DisclaimerDialog } from './components/DisclaimerDialog';
-import { RecentMedications } from './components/RecentMedications';
 import { UpdateToast } from './components/UpdateToast';
 import { PWAUpdatePrompt } from './components/PWAUpdatePrompt';
 import { DataUpdatePrompt } from './components/DataUpdatePrompt';
@@ -125,6 +124,9 @@ export default function App() {
               value={searchQuery}
               onChange={setSearchQuery}
               onClear={() => setSearchQuery('')}
+              recentMeds={recentMeds}
+              onSelectRecentMed={handleSelectMedication}
+              onClearRecentMeds={clearRecentMeds}
             />
             <QuickFilters
               activeFilter={activeFilter}
@@ -133,13 +135,6 @@ export default function App() {
               quotaCount={quotaCount}
             />
           </div>
-
-          {/* Secondary Quick Access: Recent Lookups */}
-          <RecentMedications
-            recentMeds={recentMeds}
-            onSelectMedication={handleSelectMedication}
-            onClearRecent={clearRecentMeds}
-          />
         </div>
 
         {/* Medication List or Loading Indicator */}
