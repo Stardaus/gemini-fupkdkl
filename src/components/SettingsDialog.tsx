@@ -120,6 +120,14 @@ export function SettingsDialog({
     }
   };
 
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
+  if (!isOpen) return null;
+
   const dataVersion = versionInfo?.version || '2.0.0';
   const buildId = typeof __APP_BUILD_ID__ !== 'undefined' ? __APP_BUILD_ID__ : 'dev';
   const buildTime = typeof __APP_BUILD_TIME__ !== 'undefined' ? __APP_BUILD_TIME__ : 'N/A';
