@@ -12,8 +12,17 @@ interface TargetRect {
   height: number;
 }
 
+interface ViewportSize {
+  width: number;
+  height: number;
+}
+
 export function TourOverlay({ targetSelector, isActive }: TourOverlayProps) {
   const [rect, setRect] = useState<TargetRect | null>(null);
+  const [viewport, setViewport] = useState<ViewportSize>(() => ({
+    width: typeof window !== 'undefined' ? window.innerWidth : 1024,
+    height: typeof window !== 'undefined' ? window.innerHeight : 768,
+  }));
 
   useEffect(() => {
     if (!isActive) {
@@ -21,7 +30,12 @@ export function TourOverlay({ targetSelector, isActive }: TourOverlayProps) {
       return;
     }
 
-    const updateRect = () => {
+    const updateRectAndViewport = () => {
+      setViewport({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+
       if (!targetSelector) {
         setRect(null);
         return;
@@ -41,71 +55,71 @@ export function TourOverlay({ targetSelector, isActive }: TourOverlayProps) {
       }
     };
 
-    updateRect();
-    const interval = setInterval(updateRect, 300);
-    window.addEventListener('resize', updateRect);
-    window.addEventListener('scroll', updateRect, true);
+    updateRectAndViewport();
+    const interval = setInterval(updateRectAndViewport, 300);
+    window.addEventListener('resize', updateRectAndViewport);
+    window.addEventListener('scroll', updateRectAndViewport, true);
 
     return () => {
       clearInterval(interval);
-      window.removeEventListener('resize', updateRect);
-      window.removeEventListener('scroll', updateRect, true);
+      window.removeEventListener('resize', updateRectAndViewport);
+      window.removeEventListener('scroll', updateRectAndViewport, true);
     };
   }, [targetSelector, isActive]);
 
   if (!isActive) return null;
 
-  // Fallback when target element is not found or no target: full screen backdrop (blocks events)
+  // Fallback when target element is missing or not provided
   if (!rect) {
     return (
       <div
         data-testid="tour-overlay-fallback"
-        className="fixed inset-0 z-50 bg-slate-950/75 dark:bg-slate-950/85 backdrop-blur-xs transition-opacity duration-200 pointer-events-auto"
+        className="fixed inset-0 z-50 bg-slate-950/75 dark:bg-slate-950/85 transition-opacity duration-200 pointer-events-auto"
       />
     );
   }
 
-  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
-  const screenHeight = typeof window !== 'undefined' ? window.innerHeight : 768;
-
   const topHeight = Math.max(0, rect.top);
   const bottomTop = rect.top + rect.height;
-  const bottomHeight = Math.max(0, screenHeight - bottomTop);
+  const bottomHeight = Math.max(0, viewport.height - bottomTop);
   const leftWidth = Math.max(0, rect.left);
   const rightLeft = rect.left + rect.width;
-  const rightWidth = Math.max(0, screenWidth - rightLeft);
+  const rightWidth = Math.max(0, viewport.width - rightLeft);
+
+  const backdropBlocks = [
+    {
+      id: 'top',
+      style: { top: 0, left: 0, right: 0, height: `${topHeight}px` },
+    },
+    {
+      id: 'bottom',
+      style: { top: `${bottomTop}px`, left: 0, right: 0, height: `${bottomHeight}px` },
+    },
+    {
+      id: 'left',
+      style: { top: `${rect.top}px`, left: 0, width: `${leftWidth}px`, height: `${rect.height}px` },
+    },
+    {
+      id: 'right',
+      style: { top: `${rect.top}px`, right: 0, width: `${rightWidth}px`, height: `${rect.height}px` },
+    },
+  ];
 
   return (
     <div className="fixed inset-0 z-50 pointer-events-none">
       {/* 4 Dimming Backdrop Regions around Target Rect (pointer-events-auto) */}
-      {/* Top Block */}
-      <div
-        className="fixed left-0 right-0 top-0 bg-slate-950/75 dark:bg-slate-950/85 transition-all duration-150 pointer-events-auto"
-        style={{ height: `${topHeight}px` }}
-      />
+      {backdropBlocks.map((block) => (
+        <div
+          key={block.id}
+          className="fixed bg-slate-950/75 dark:bg-slate-950/85 transition-all duration-150 pointer-events-auto"
+          style={block.style}
+        />
+      ))}
 
-      {/* Bottom Block */}
-      <div
-        className="fixed left-0 right-0 bottom-0 bg-slate-950/75 dark:bg-slate-950/85 transition-all duration-150 pointer-events-auto"
-        style={{ top: `${bottomTop}px`, height: `${bottomHeight}px` }}
-      />
-
-      {/* Left Block */}
-      <div
-        className="fixed left-0 bg-slate-950/75 dark:bg-slate-950/85 transition-all duration-150 pointer-events-auto"
-        style={{ top: `${rect.top}px`, height: `${rect.height}px`, width: `${leftWidth}px` }}
-      />
-
-      {/* Right Block */}
-      <div
-        className="fixed right-0 bg-slate-950/75 dark:bg-slate-950/85 transition-all duration-150 pointer-events-auto"
-        style={{ top: `${rect.top}px`, height: `${rect.height}px`, width: `${rightWidth}px` }}
-      />
-
-      {/* Highlighting Border Ring over Target Cutout (pointer-events-none allows clicks to pass through!) */}
+      {/* Highlighting Border Ring over Target Cutout (pointer-events-none allows clicks to pass through) */}
       <div
         aria-hidden="true"
-        className="fixed pointer-events-none rounded-xl border-2 border-brand-500 shadow-[0_0_20px_rgba(20,184,166,0.6)] transition-all duration-150"
+        className="fixed pointer-events-none rounded-xl border-2 border-brand-500 shadow-lg shadow-brand-500/60 transition-all duration-150"
         style={{
           top: `${rect.top}px`,
           left: `${rect.left}px`,

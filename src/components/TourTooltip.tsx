@@ -12,6 +12,11 @@ interface TourTooltipProps {
   onComplete: () => void;
 }
 
+const TOOLTIP_MARGIN = 16;
+const PADDING_HORIZONTAL = 32;
+const MAX_TOOLTIP_WIDTH = 340;
+const MIN_TOP_OFFSET = 200;
+
 export function TourTooltip({
   step,
   currentStepIndex,
@@ -45,16 +50,21 @@ export function TourTooltip({
       }
 
       const rect = el.getBoundingClientRect();
-      const margin = 16;
-      const tooltipWidth = Math.min(window.innerWidth - 32, 340);
+      const tooltipWidth = Math.min(window.innerWidth - PADDING_HORIZONTAL, MAX_TOOLTIP_WIDTH);
 
-      let top = rect.bottom + margin;
-      let left = Math.max(16, Math.min(rect.left + rect.width / 2 - tooltipWidth / 2, window.innerWidth - tooltipWidth - 16));
+      let top = rect.bottom + TOOLTIP_MARGIN;
+      let left = Math.max(
+        TOOLTIP_MARGIN,
+        Math.min(
+          rect.left + rect.width / 2 - tooltipWidth / 2,
+          window.innerWidth - tooltipWidth - TOOLTIP_MARGIN
+        )
+      );
 
-      if (step.placement === 'top' && rect.top > 200) {
-        top = Math.max(16, rect.top - 200);
-      } else if (top + 200 > window.innerHeight) {
-        top = Math.max(16, rect.top - 200);
+      if (step.placement === 'top' && rect.top > MIN_TOP_OFFSET) {
+        top = Math.max(TOOLTIP_MARGIN, rect.top - MIN_TOP_OFFSET);
+      } else if (top + MIN_TOP_OFFSET > window.innerHeight) {
+        top = Math.max(TOOLTIP_MARGIN, rect.top - MIN_TOP_OFFSET);
       }
 
       setStyle({

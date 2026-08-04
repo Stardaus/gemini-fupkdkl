@@ -36,14 +36,6 @@ export function useTour() {
     setCurrentStepIndex((prevIndex) => Math.max(0, prevIndex - 1));
   }, []);
 
-  const skip = useCallback(() => {
-    finishTour();
-  }, [finishTour]);
-
-  const complete = useCallback(() => {
-    finishTour();
-  }, [finishTour]);
-
   const currentStep = TOUR_STEPS[currentStepIndex] || null;
 
   return {
@@ -55,7 +47,7 @@ export function useTour() {
     start,
     next,
     back,
-    skip,
-    complete,
+    skip: finishTour,
+    complete: finishTour,
   };
 }
