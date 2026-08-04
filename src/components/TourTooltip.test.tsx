@@ -22,10 +22,16 @@ const mockActionStep: TourStep = {
   actionHint: 'Tap a medication card to continue',
 };
 
+const defaultProps = {
+  rect: null,
+  viewport: { width: 1024, height: 768 },
+};
+
 describe('TourTooltip component', () => {
   it('renders step title, description, and counter', () => {
     render(
       <TourTooltip
+        {...defaultProps}
         step={mockStep}
         currentStepIndex={0}
         totalSteps={7}
@@ -45,6 +51,7 @@ describe('TourTooltip component', () => {
     const handleNext = vi.fn();
     render(
       <TourTooltip
+        {...defaultProps}
         step={mockStep}
         currentStepIndex={0}
         totalSteps={7}
@@ -64,6 +71,7 @@ describe('TourTooltip component', () => {
     const handleSkip = vi.fn();
     render(
       <TourTooltip
+        {...defaultProps}
         step={mockStep}
         currentStepIndex={0}
         totalSteps={7}
@@ -82,6 +90,7 @@ describe('TourTooltip component', () => {
   it('hides Next button and displays action hint on action-gated step', () => {
     render(
       <TourTooltip
+        {...defaultProps}
         step={mockActionStep}
         currentStepIndex={3}
         totalSteps={7}
@@ -100,6 +109,7 @@ describe('TourTooltip component', () => {
     const handleComplete = vi.fn();
     render(
       <TourTooltip
+        {...defaultProps}
         step={mockStep}
         currentStepIndex={6}
         totalSteps={7}

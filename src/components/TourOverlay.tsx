@@ -1,13 +1,15 @@
-import { useTargetBoundingRect } from '../hooks/useTargetBoundingRect';
+import { TargetRect, ViewportSize } from '../hooks/useTargetBoundingRect';
 
 interface TourOverlayProps {
-  targetSelector: string | null;
+  rect: TargetRect | null;
+  viewport: ViewportSize;
   isActive: boolean;
 }
 
-export function TourOverlay({ targetSelector, isActive }: TourOverlayProps) {
-  const { rect, viewport } = useTargetBoundingRect(targetSelector, isActive);
+const SPOTLIGHT_PADDING = 6;
+const SPOTLIGHT_SIZE_EXPANSION = 12;
 
+export function TourOverlay({ rect, viewport, isActive }: TourOverlayProps) {
   if (!isActive) return null;
 
   // Fallback when target element is missing or not provided
@@ -20,11 +22,18 @@ export function TourOverlay({ targetSelector, isActive }: TourOverlayProps) {
     );
   }
 
-  const topHeight = Math.max(0, rect.top);
-  const bottomTop = rect.top + rect.height;
+  const paddedRect = {
+    top: Math.max(0, rect.top - SPOTLIGHT_PADDING),
+    left: Math.max(0, rect.left - SPOTLIGHT_PADDING),
+    width: rect.width + SPOTLIGHT_SIZE_EXPANSION,
+    height: rect.height + SPOTLIGHT_SIZE_EXPANSION,
+  };
+
+  const topHeight = Math.max(0, paddedRect.top);
+  const bottomTop = paddedRect.top + paddedRect.height;
   const bottomHeight = Math.max(0, viewport.height - bottomTop);
-  const leftWidth = Math.max(0, rect.left);
-  const rightLeft = rect.left + rect.width;
+  const leftWidth = Math.max(0, paddedRect.left);
+  const rightLeft = paddedRect.left + paddedRect.width;
   const rightWidth = Math.max(0, viewport.width - rightLeft);
 
   const backdropBlocks = [
@@ -38,11 +47,11 @@ export function TourOverlay({ targetSelector, isActive }: TourOverlayProps) {
     },
     {
       id: 'left',
-      style: { top: `${rect.top}px`, left: 0, width: `${leftWidth}px`, height: `${rect.height}px` },
+      style: { top: `${paddedRect.top}px`, left: 0, width: `${leftWidth}px`, height: `${paddedRect.height}px` },
     },
     {
       id: 'right',
-      style: { top: `${rect.top}px`, right: 0, width: `${rightWidth}px`, height: `${rect.height}px` },
+      style: { top: `${paddedRect.top}px`, right: 0, width: `${rightWidth}px`, height: `${paddedRect.height}px` },
     },
   ];
 
@@ -62,10 +71,10 @@ export function TourOverlay({ targetSelector, isActive }: TourOverlayProps) {
         aria-hidden="true"
         className="fixed pointer-events-none rounded-xl border-2 border-brand-500 shadow-lg shadow-brand-500/60 transition-all duration-150"
         style={{
-          top: `${rect.top}px`,
-          left: `${rect.left}px`,
-          width: `${rect.width}px`,
-          height: `${rect.height}px`,
+          top: `${paddedRect.top}px`,
+          left: `${paddedRect.left}px`,
+          width: `${paddedRect.width}px`,
+          height: `${paddedRect.height}px`,
         }}
       />
     </div>

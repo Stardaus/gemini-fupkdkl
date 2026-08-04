@@ -12,6 +12,8 @@ export interface ViewportSize {
   height: number;
 }
 
+const POLL_INTERVAL_MS = 300;
+
 export function useTargetBoundingRect(targetSelector: string | null, isActive: boolean) {
   const [rect, setRect] = useState<TargetRect | null>(null);
   const [viewport, setViewport] = useState<ViewportSize>(() => ({
@@ -40,10 +42,10 @@ export function useTargetBoundingRect(targetSelector: string | null, isActive: b
       if (el) {
         const r = el.getBoundingClientRect();
         setRect({
-          top: Math.max(0, r.top - 6),
-          left: Math.max(0, r.left - 6),
-          width: r.width + 12,
-          height: r.height + 12,
+          top: Math.max(0, r.top),
+          left: Math.max(0, r.left),
+          width: r.width,
+          height: r.height,
         });
       } else {
         setRect(null);
@@ -51,7 +53,7 @@ export function useTargetBoundingRect(targetSelector: string | null, isActive: b
     };
 
     updateRectAndViewport();
-    const interval = setInterval(updateRectAndViewport, 300);
+    const interval = setInterval(updateRectAndViewport, POLL_INTERVAL_MS);
     window.addEventListener('resize', updateRectAndViewport);
     window.addEventListener('scroll', updateRectAndViewport, true);
 

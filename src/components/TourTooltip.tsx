@@ -1,4 +1,4 @@
-import { useTargetBoundingRect } from '../hooks/useTargetBoundingRect';
+import { TargetRect, ViewportSize } from '../hooks/useTargetBoundingRect';
 import { TourStep } from '../types/tour';
 import { ChevronLeft, ChevronRight, X, Sparkles, Touchpad as TouchApp } from 'lucide-react';
 
@@ -6,6 +6,8 @@ interface TourTooltipProps {
   step: TourStep;
   currentStepIndex: number;
   totalSteps: number;
+  rect: TargetRect | null;
+  viewport: ViewportSize;
   onNext: () => void;
   onBack: () => void;
   onSkip: () => void;
@@ -21,13 +23,13 @@ export function TourTooltip({
   step,
   currentStepIndex,
   totalSteps,
+  rect,
+  viewport,
   onNext,
   onBack,
   onSkip,
   onComplete,
 }: TourTooltipProps) {
-  const { rect, viewport } = useTargetBoundingRect(step.targetSelector, true);
-
   const isFirst = currentStepIndex === 0;
   const isLast = currentStepIndex === totalSteps - 1;
   const isActionGated = step.advanceOn === 'action';
