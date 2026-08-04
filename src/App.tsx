@@ -90,19 +90,19 @@ export default function App() {
     }
   }, [hasAccepted, shouldTourAutoStart, isTourActive, isLoading, startTour]);
 
-  // Action-gated step 4: advance when medication detail dialog opens
+  // Action-gated step: advance when medication detail dialog opens
   useEffect(() => {
-    if (isTourActive && tourStepIndex === 3 && selectedMedication) {
+    if (isTourActive && tourStep?.id === 'medication-list' && selectedMedication) {
       nextTourStep();
     }
-  }, [isTourActive, tourStepIndex, selectedMedication, nextTourStep]);
+  }, [isTourActive, tourStep, selectedMedication, nextTourStep]);
 
-  // Action-gated step 6: advance when settings dialog opens
+  // Action-gated step: advance when settings dialog opens
   useEffect(() => {
-    if (isTourActive && tourStepIndex === 5 && isSettingsOpen) {
+    if (isTourActive && tourStep?.id === 'footer-settings' && isSettingsOpen) {
       nextTourStep();
     }
-  }, [isTourActive, tourStepIndex, isSettingsOpen, nextTourStep]);
+  }, [isTourActive, tourStep, isSettingsOpen, nextTourStep]);
 
   const handleSelectMedication = useCallback(
     (med: Medication) => {
@@ -117,12 +117,12 @@ export default function App() {
   }, []);
 
   const handleTourNext = useCallback(() => {
-    // If moving away from step 5 (medication detail), close the detail dialog
-    if (tourStepIndex === 4) {
+    // If moving away from medication detail step, close the detail dialog
+    if (tourStep?.id === 'medication-detail') {
       setSelectedMedication(null);
     }
     nextTourStep();
-  }, [tourStepIndex, nextTourStep]);
+  }, [tourStep, nextTourStep]);
 
   return (
     <div className="h-dvh max-h-dvh overflow-hidden flex flex-col pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)] bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans selection:bg-brand-500 selection:text-white transition-colors duration-200">

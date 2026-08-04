@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useTargetBoundingRect } from '../hooks/useTargetBoundingRect';
 import { TourStep } from '../types/tour';
 import { ChevronLeft, ChevronRight, X, Sparkles, Touchpad as TouchApp } from 'lucide-react';
 
@@ -12,7 +12,7 @@ interface TourTooltipProps {
   onComplete: () => void;
 }
 
-const TOOLTIP_MARGIN = 16;
+const MARGIN = 16;
 const PADDING_HORIZONTAL = 32;
 const MAX_TOOLTIP_WIDTH = 340;
 const MIN_TOP_OFFSET = 200;
@@ -26,62 +26,42 @@ export function TourTooltip({
   onSkip,
   onComplete,
 }: TourTooltipProps) {
-  const [style, setStyle] = useState<React.CSSProperties>({});
-
-  useEffect(() => {
-    if (!step.targetSelector) {
-      setStyle({
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-      });
-      return;
-    }
-
-    const updatePosition = () => {
-      const el = document.querySelector(step.targetSelector!);
-      if (!el) {
-        setStyle({
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-        });
-        return;
-      }
-
-      const rect = el.getBoundingClientRect();
-      const tooltipWidth = Math.min(window.innerWidth - PADDING_HORIZONTAL, MAX_TOOLTIP_WIDTH);
-
-      let top = rect.bottom + TOOLTIP_MARGIN;
-      let left = Math.max(
-        TOOLTIP_MARGIN,
-        Math.min(
-          rect.left + rect.width / 2 - tooltipWidth / 2,
-          window.innerWidth - tooltipWidth - TOOLTIP_MARGIN
-        )
-      );
-
-      if (step.placement === 'top' && rect.top > MIN_TOP_OFFSET) {
-        top = Math.max(TOOLTIP_MARGIN, rect.top - MIN_TOP_OFFSET);
-      } else if (top + MIN_TOP_OFFSET > window.innerHeight) {
-        top = Math.max(TOOLTIP_MARGIN, rect.top - MIN_TOP_OFFSET);
-      }
-
-      setStyle({
-        top: `${top}px`,
-        left: `${left}px`,
-        width: `${tooltipWidth}px`,
-      });
-    };
-
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-    return () => window.removeEventListener('resize', updatePosition);
-  }, [step]);
+  const { rect, viewport } = useTargetBoundingRect(step.targetSelector, true);
 
   const isFirst = currentStepIndex === 0;
   const isLast = currentStepIndex === totalSteps - 1;
   const isActionGated = step.advanceOn === 'action';
+
+  let style: React.CSSProperties = {
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+  };
+
+  if (rect) {
+    const tooltipWidth = Math.min(viewport.width - PADDING_HORIZONTAL, MAX_TOOLTIP_WIDTH);
+
+    let top = rect.top + rect.height + MARGIN;
+    let left = Math.max(
+      MARGIN,
+      Math.min(
+        rect.left + rect.width / 2 - tooltipWidth / 2,
+        viewport.width - tooltipWidth - MARGIN
+      )
+    );
+
+    if (step.placement === 'top' && rect.top > MIN_TOP_OFFSET) {
+      top = Math.max(MARGIN, rect.top - MIN_TOP_OFFSET);
+    } else if (top + MIN_TOP_OFFSET > viewport.height) {
+      top = Math.max(MARGIN, rect.top - MIN_TOP_OFFSET);
+    }
+
+    style = {
+      top: `${top}px`,
+      left: `${left}px`,
+      width: `${tooltipWidth}px`,
+    };
+  }
 
   return (
     <div
