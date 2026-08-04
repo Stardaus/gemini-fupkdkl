@@ -17,7 +17,12 @@ import {
 } from 'lucide-react';
 import { VersionInfo } from '../types/formulary';
 import { Theme } from '../hooks/useTheme';
-import { CheckUpdateResult } from './Footer';
+
+export interface CheckUpdateResult {
+  hasUpdate?: boolean;
+  isOffline?: boolean;
+  error?: boolean;
+}
 
 export interface SettingsDialogProps {
   isOpen: boolean;
@@ -176,9 +181,9 @@ export function SettingsDialog({
           type="button"
           onClick={onClose}
           aria-label="Close settings"
-          className="text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:scale-95 shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer"
+          className="text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:scale-95 shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
         >
-          <X className="size-5" />
+          <X className="size-5" aria-hidden="true" />
         </button>
       </div>
 
@@ -200,7 +205,7 @@ export function SettingsDialog({
               type="button"
               onClick={onToggleTheme}
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-              className="p-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-300 hover:text-brand-600 transition-all active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer shadow-xs"
+              className="p-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-300 hover:text-brand-600 transition-all active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer shadow-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
             >
               {theme === 'dark' ? (
                 <Sun className="size-5 text-amber-500" aria-hidden="true" />
@@ -227,7 +232,7 @@ export function SettingsDialog({
                   : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30'
               }`}
             >
-              {isOnline ? <Wifi className="size-5" /> : <WifiOff className="size-5" />}
+              {isOnline ? <Wifi className="size-5" aria-hidden="true" /> : <WifiOff className="size-5" aria-hidden="true" />}
             </div>
           </div>
 
@@ -248,13 +253,13 @@ export function SettingsDialog({
               type="button"
               onClick={orientationLock.onToggle}
               aria-label={`Toggle portrait orientation lock (currently ${orientationLock.isLocked ? 'locked' : 'unlocked'})`}
-              className={`p-2.5 rounded-xl border flex items-center justify-center transition-all active:scale-95 min-w-[44px] min-h-[44px] cursor-pointer shadow-xs shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 ${
+              className={`p-2.5 rounded-xl border flex items-center justify-center transition-all active:scale-95 min-w-[44px] min-h-[44px] cursor-pointer shadow-xs shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 ${
                 orientationLock.isLocked
                   ? 'bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 border-brand-500/30'
                   : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
               }`}
             >
-              {orientationLock.isLocked ? <Lock className="size-5" /> : <Unlock className="size-5" />}
+              {orientationLock.isLocked ? <Lock className="size-5" aria-hidden="true" /> : <Unlock className="size-5" aria-hidden="true" />}
             </button>
           </div>
         </div>
@@ -263,7 +268,7 @@ export function SettingsDialog({
         <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 rounded-xl p-4 space-y-3">
           <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700/40 pb-2.5">
             <div className="flex items-center gap-2">
-              <Database className="size-4 text-brand-600 dark:text-brand-400" />
+              <Database className="size-4 text-brand-600 dark:text-brand-400" aria-hidden="true" />
               <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
                 Formulary Data Version
               </span>
@@ -275,7 +280,7 @@ export function SettingsDialog({
 
           <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700/40 pb-2.5 text-xs">
             <div className="flex items-center gap-2">
-              <Cpu className="size-4 text-brand-600 dark:text-brand-400" />
+              <Cpu className="size-4 text-brand-600 dark:text-brand-400" aria-hidden="true" />
               <span className="font-bold text-slate-700 dark:text-slate-300">App Build ID</span>
             </div>
             <span className="font-mono text-slate-600 dark:text-slate-400">{buildId}</span>
@@ -310,7 +315,7 @@ export function SettingsDialog({
             onClick={handleCheck}
             disabled={checkState === 'checking'}
             aria-label="Check for updates"
-            className={`min-h-[44px] px-4 py-2 rounded-xl font-bold text-xs shadow-sm transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2 shrink-0 disabled:opacity-60 disabled:cursor-not-allowed ${
+            className={`min-h-[44px] px-4 py-2 rounded-xl font-bold text-xs shadow-sm transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2 shrink-0 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 ${
               checkState === 'up-to-date'
                 ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/40'
                 : checkState === 'error'
@@ -320,25 +325,25 @@ export function SettingsDialog({
           >
             {checkState === 'checking' && (
               <>
-                <RefreshCw className="size-4 animate-spin" />
+                <RefreshCw className="size-4 animate-spin" aria-hidden="true" />
                 <span>Checking...</span>
               </>
             )}
             {checkState === 'up-to-date' && (
               <>
-                <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
+                <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
                 <span>Up to Date ✓</span>
               </>
             )}
             {checkState === 'error' && (
               <>
-                <AlertCircle className="size-4 text-amber-600 dark:text-amber-400" />
+                <AlertCircle className="size-4 text-amber-600 dark:text-amber-400" aria-hidden="true" />
                 <span>Offline / Error</span>
               </>
             )}
             {checkState === 'idle' && (
               <>
-                <RefreshCw className="size-4" />
+                <RefreshCw className="size-4" aria-hidden="true" />
                 <span>Check Updates Now</span>
               </>
             )}
@@ -348,7 +353,7 @@ export function SettingsDialog({
         {/* Disclaimer / App Info */}
         <div className="pt-2 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1">
           <p className="flex items-center justify-center gap-1 font-semibold text-slate-700 dark:text-slate-300">
-            <ShieldCheck className="size-3.5 text-brand-600 dark:text-brand-400" />
+            <ShieldCheck className="size-3.5 text-brand-600 dark:text-brand-400" aria-hidden="true" />
             Pejabat Kesihatan Daerah Kuala Langat
           </p>
           <p className="text-[11px]">Official Clinical Medication Reference PWA</p>
@@ -360,7 +365,7 @@ export function SettingsDialog({
         <button
           type="button"
           onClick={onClose}
-          className="min-h-[44px] px-5 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-100 rounded-xl text-sm font-semibold transition-all active:scale-95 cursor-pointer shadow-sm"
+          className="min-h-[44px] px-5 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-100 rounded-xl text-sm font-semibold transition-all active:scale-95 cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
         >
           Done
         </button>

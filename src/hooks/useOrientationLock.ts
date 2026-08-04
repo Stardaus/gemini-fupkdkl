@@ -1,5 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 
+declare global {
+  interface ScreenOrientation {
+    lock(orientation: string): Promise<void>;
+  }
+}
+
 const STORAGE_KEY = 'fupkdkl_portrait_lock';
 
 export function useOrientationLock() {
@@ -17,21 +23,19 @@ export function useOrientationLock() {
   }, []);
 
   useEffect(() => {
-    if (typeof screen === 'undefined' || !screen.orientation) return;
+    if (!screen.orientation) return;
 
     if (isPortraitLocked) {
-      const orientation = screen.orientation as any;
-      if (typeof orientation.lock === 'function') {
-        orientation.lock('portrait').catch((e: unknown) => {
+      if (typeof screen.orientation.lock === 'function') {
+        screen.orientation.lock('portrait').catch((e: unknown) => {
           // Silently fail if lock is not supported or rejected (e.g., not in PWA standalone mode)
           console.debug('Orientation lock failed or unsupported:', e);
         });
       }
     } else {
-      const orientation = screen.orientation as any;
-      if (typeof orientation.unlock === 'function') {
+      if (typeof screen.orientation.unlock === 'function') {
         try {
-          orientation.unlock();
+          screen.orientation.unlock();
         } catch (e) {
           console.debug('Orientation unlock failed:', e);
         }

@@ -1,17 +1,9 @@
 import { ShieldCheck, Settings } from 'lucide-react';
-import { VersionInfo } from '../types/formulary';
-
-export interface CheckUpdateResult {
-  hasUpdate?: boolean;
-  isOffline?: boolean;
-  error?: boolean;
-}
 
 export interface FooterProps {
-  versionInfo?: VersionInfo | null;
-  onCheckUpdate?: () => Promise<CheckUpdateResult | void> | void;
   onOpenSettings?: () => void;
 }
+
 const ResponsiveLabel = ({ full, short }: { full: string; short: string }) => (
   <>
     <span className="hidden sm:inline">{full}</span>
@@ -34,7 +26,7 @@ export function Footer({ onOpenSettings }: FooterProps) {
           </span>
           <span className="hidden sm:inline text-slate-400 dark:text-slate-600 shrink-0">•</span>
           <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1 shrink-0">
-            <ShieldCheck className="size-3 text-brand-600 dark:text-brand-400" />
+            <ShieldCheck className="size-3 text-brand-600 dark:text-brand-400" aria-hidden="true" />
             <ResponsiveLabel full="Official Clinical Reference Guide" short="Official" />
           </span>
         </div>
@@ -43,9 +35,9 @@ export function Footer({ onOpenSettings }: FooterProps) {
           <button
             type="button"
             onClick={onOpenSettings}
-            className="shrink-0 inline-flex items-center gap-1 font-medium text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400 transition-colors cursor-pointer min-h-[44px] px-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
+            className="shrink-0 inline-flex items-center gap-1 font-medium text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400 transition-colors cursor-pointer min-h-[44px] px-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
           >
-            <Settings className="size-3" />
+            <Settings className="size-3" aria-hidden="true" />
             <ResponsiveLabel full="Settings & Info" short="Settings" />
           </button>
         )}
