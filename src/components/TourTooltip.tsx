@@ -93,9 +93,9 @@ export function TourTooltip({
           type="button"
           onClick={onSkip}
           aria-label="Close tour"
-          className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+          className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer"
         >
-          <X className="size-4" aria-hidden="true" />
+          <X className="size-5" aria-hidden="true" />
         </button>
       </div>
 
@@ -120,7 +120,7 @@ export function TourTooltip({
         <button
           type="button"
           onClick={onSkip}
-          className="text-xs font-medium text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 min-h-[36px] px-2 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+          className="text-xs font-medium text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 min-h-[44px] px-3 rounded-xl transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 cursor-pointer"
         >
           Skip Tour
         </button>
@@ -130,7 +130,7 @@ export function TourTooltip({
             <button
               type="button"
               onClick={onBack}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 min-h-[36px] px-2.5 rounded-xl border border-slate-200 dark:border-slate-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 min-h-[44px] px-3 rounded-xl border border-slate-200 dark:border-slate-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 cursor-pointer"
             >
               <ChevronLeft className="size-3.5" aria-hidden="true" />
               <span>Back</span>
@@ -141,7 +141,7 @@ export function TourTooltip({
             <button
               type="button"
               onClick={isLast ? onComplete : onNext}
-              className="inline-flex items-center gap-1 text-xs font-bold text-white bg-brand-600 hover:bg-brand-500 min-h-[36px] px-3.5 rounded-xl shadow-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+              className="inline-flex items-center gap-1 text-xs font-bold text-white bg-brand-600 hover:bg-brand-500 min-h-[44px] px-4 rounded-xl shadow-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 cursor-pointer"
             >
               <span>{isLast ? 'Done' : 'Next'}</span>
               {!isLast && <ChevronRight className="size-3.5" aria-hidden="true" />}

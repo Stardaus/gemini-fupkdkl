@@ -14,7 +14,8 @@ describe('useTour hook', () => {
     expect(result.current.isActive).toBe(false);
   });
 
-  it('starts tour at index 0 when start() is called', () => {
+  it('starts tour at index 0 and clears completion key when start() is called', () => {
+    localStorage.setItem('fupkdkl_tour_completed', 'true');
     const { result } = renderHook(() => useTour());
 
     act(() => {
@@ -24,6 +25,7 @@ describe('useTour hook', () => {
     expect(result.current.isActive).toBe(true);
     expect(result.current.currentStepIndex).toBe(0);
     expect(result.current.currentStep?.id).toBe(TOUR_STEPS[0].id);
+    expect(localStorage.getItem('fupkdkl_tour_completed')).toBeNull();
   });
 
   it('navigates next and back correctly', () => {

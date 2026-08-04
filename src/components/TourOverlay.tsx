@@ -31,8 +31,8 @@ export function TourOverlay({ targetSelector, isActive }: TourOverlayProps) {
       if (el) {
         const r = el.getBoundingClientRect();
         setRect({
-          top: r.top - 6,
-          left: r.left - 6,
+          top: Math.max(0, r.top - 6),
+          left: Math.max(0, r.left - 6),
           width: r.width + 12,
           height: r.height + 12,
         });
@@ -55,51 +55,64 @@ export function TourOverlay({ targetSelector, isActive }: TourOverlayProps) {
 
   if (!isActive) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 pointer-events-auto">
-      {/* SVG Mask Overlay for Spotlight Cutout */}
-      <svg className="w-full h-full text-slate-950/75 dark:text-slate-950/85 transition-colors">
-        <defs>
-          <mask id="spotlight-mask">
-            {/* White background = dim layer */}
-            <rect x="0" y="0" width="100%" height="100%" fill="white" />
-            {/* Black rectangle = transparent cutout hole */}
-            {rect && (
-              <rect
-                x={rect.left}
-                y={rect.top}
-                width={rect.width}
-                height={rect.height}
-                rx="12"
-                ry="12"
-                fill="black"
-              />
-            )}
-          </mask>
-        </defs>
-        <rect
-          x="0"
-          y="0"
-          width="100%"
-          height="100%"
-          fill="currentColor"
-          mask="url(#spotlight-mask)"
-        />
-      </svg>
+  // Fallback when target element is not found or no target: full screen backdrop (blocks events)
+  if (!rect) {
+    return (
+      <div
+        data-testid="tour-overlay-fallback"
+        className="fixed inset-0 z-50 bg-slate-950/75 dark:bg-slate-950/85 backdrop-blur-xs transition-opacity duration-200 pointer-events-auto"
+      />
+    );
+  }
 
-      {/* Highlighting Border Ring over Target */}
-      {rect && (
-        <div
-          aria-hidden="true"
-          className="fixed pointer-events-none rounded-xl border-2 border-brand-500 shadow-[0_0_20px_rgba(20,184,166,0.5)] transition-all duration-200"
-          style={{
-            top: `${rect.top}px`,
-            left: `${rect.left}px`,
-            width: `${rect.width}px`,
-            height: `${rect.height}px`,
-          }}
-        />
-      )}
+  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
+  const screenHeight = typeof window !== 'undefined' ? window.innerHeight : 768;
+
+  const topHeight = Math.max(0, rect.top);
+  const bottomTop = rect.top + rect.height;
+  const bottomHeight = Math.max(0, screenHeight - bottomTop);
+  const leftWidth = Math.max(0, rect.left);
+  const rightLeft = rect.left + rect.width;
+  const rightWidth = Math.max(0, screenWidth - rightLeft);
+
+  return (
+    <div className="fixed inset-0 z-50 pointer-events-none">
+      {/* 4 Dimming Backdrop Regions around Target Rect (pointer-events-auto) */}
+      {/* Top Block */}
+      <div
+        className="fixed left-0 right-0 top-0 bg-slate-950/75 dark:bg-slate-950/85 transition-all duration-150 pointer-events-auto"
+        style={{ height: `${topHeight}px` }}
+      />
+
+      {/* Bottom Block */}
+      <div
+        className="fixed left-0 right-0 bottom-0 bg-slate-950/75 dark:bg-slate-950/85 transition-all duration-150 pointer-events-auto"
+        style={{ top: `${bottomTop}px`, height: `${bottomHeight}px` }}
+      />
+
+      {/* Left Block */}
+      <div
+        className="fixed left-0 bg-slate-950/75 dark:bg-slate-950/85 transition-all duration-150 pointer-events-auto"
+        style={{ top: `${rect.top}px`, height: `${rect.height}px`, width: `${leftWidth}px` }}
+      />
+
+      {/* Right Block */}
+      <div
+        className="fixed right-0 bg-slate-950/75 dark:bg-slate-950/85 transition-all duration-150 pointer-events-auto"
+        style={{ top: `${rect.top}px`, height: `${rect.height}px`, width: `${rightWidth}px` }}
+      />
+
+      {/* Highlighting Border Ring over Target Cutout (pointer-events-none allows clicks to pass through!) */}
+      <div
+        aria-hidden="true"
+        className="fixed pointer-events-none rounded-xl border-2 border-brand-500 shadow-[0_0_20px_rgba(20,184,166,0.6)] transition-all duration-150"
+        style={{
+          top: `${rect.top}px`,
+          left: `${rect.left}px`,
+          width: `${rect.width}px`,
+          height: `${rect.height}px`,
+        }}
+      />
     </div>
   );
 }

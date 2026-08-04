@@ -11,7 +11,13 @@ export function useTour() {
     return localStorage.getItem(STORAGE_KEY) === null;
   }, []);
 
+  const finishTour = useCallback(() => {
+    localStorage.setItem(STORAGE_KEY, 'true');
+    setIsActive(false);
+  }, []);
+
   const start = useCallback(() => {
+    localStorage.removeItem(STORAGE_KEY);
     setCurrentStepIndex(0);
     setIsActive(true);
   }, []);
@@ -19,27 +25,24 @@ export function useTour() {
   const next = useCallback(() => {
     setCurrentStepIndex((prevIndex) => {
       if (prevIndex >= TOUR_STEPS.length - 1) {
-        localStorage.setItem(STORAGE_KEY, 'true');
-        setIsActive(false);
+        finishTour();
         return prevIndex;
       }
       return prevIndex + 1;
     });
-  }, []);
+  }, [finishTour]);
 
   const back = useCallback(() => {
     setCurrentStepIndex((prevIndex) => Math.max(0, prevIndex - 1));
   }, []);
 
   const skip = useCallback(() => {
-    localStorage.setItem(STORAGE_KEY, 'true');
-    setIsActive(false);
-  }, []);
+    finishTour();
+  }, [finishTour]);
 
   const complete = useCallback(() => {
-    localStorage.setItem(STORAGE_KEY, 'true');
-    setIsActive(false);
-  }, []);
+    finishTour();
+  }, [finishTour]);
 
   const currentStep = TOUR_STEPS[currentStepIndex] || null;
 
