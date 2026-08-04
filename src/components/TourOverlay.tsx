@@ -23,8 +23,8 @@ export function TourOverlay({ rect, viewport, isActive }: TourOverlayProps) {
   }
 
   const paddedRect = {
-    top: Math.max(0, rect.top - SPOTLIGHT_PADDING),
-    left: Math.max(0, rect.left - SPOTLIGHT_PADDING),
+    top: rect.top - SPOTLIGHT_PADDING,
+    left: rect.left - SPOTLIGHT_PADDING,
     width: rect.width + SPOTLIGHT_SIZE_EXPANSION,
     height: rect.height + SPOTLIGHT_SIZE_EXPANSION,
   };

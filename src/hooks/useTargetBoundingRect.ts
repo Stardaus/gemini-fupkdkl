@@ -40,12 +40,12 @@ export function useTargetBoundingRect(targetSelector: string | null, isActive: b
 
       const el = document.querySelector(targetSelector);
       if (el) {
-        const r = el.getBoundingClientRect();
+        const boundingRect = el.getBoundingClientRect();
         setRect({
-          top: Math.max(0, r.top),
-          left: Math.max(0, r.left),
-          width: r.width,
-          height: r.height,
+          top: boundingRect.top,
+          left: boundingRect.left,
+          width: boundingRect.width,
+          height: boundingRect.height,
         });
       } else {
         setRect(null);
