@@ -15,21 +15,22 @@ export interface FooterProps {
 
 export function Footer({ onOpenSettings }: FooterProps) {
   return (
-    <footer className="shrink-0 mt-4 sm:mt-8 pt-3 sm:pt-4 pb-4 sm:pb-6 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 text-center sm:text-left">
-        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+    <footer className="shrink-0 py-1.5 px-3 sm:px-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md z-10 w-full text-[10px] sm:text-xs text-slate-500 dark:text-slate-400">
+      <div className="flex flex-row items-center justify-between gap-2 w-full max-w-4xl mx-auto">
+        <div className="flex flex-row items-center justify-start gap-1.5 overflow-hidden whitespace-nowrap">
           <img
             src={`${import.meta.env.BASE_URL}icon-192.png`}
             alt="PKDKL Logo"
-            className="size-4 rounded object-contain inline-block"
+            className="size-3.5 sm:size-4 rounded object-contain shrink-0"
           />
-          <span className="font-semibold text-slate-700 dark:text-slate-300">
+          <span className="font-semibold text-slate-700 dark:text-slate-300 truncate max-w-[120px] sm:max-w-none">
             © Pejabat Kesihatan Daerah Kuala Langat
           </span>
-          <span className="hidden sm:inline text-slate-400 dark:text-slate-600">•</span>
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1">
-            <ShieldCheck className="size-3 text-brand-600 dark:text-brand-400 shrink-0" />
-            Official Clinical Reference Guide
+          <span className="hidden sm:inline text-slate-400 dark:text-slate-600 shrink-0">•</span>
+          <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1 shrink-0">
+            <ShieldCheck className="size-3 text-brand-600 dark:text-brand-400" />
+            <span className="hidden sm:inline">Official Clinical Reference Guide</span>
+            <span className="sm:hidden">Official</span>
           </span>
         </div>
 
@@ -37,10 +38,11 @@ export function Footer({ onOpenSettings }: FooterProps) {
           <button
             type="button"
             onClick={onOpenSettings}
-            className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400 transition-colors cursor-pointer min-h-[32px] px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+            className="shrink-0 inline-flex items-center gap-1 font-medium text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400 transition-colors cursor-pointer min-h-[28px] px-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
           >
             <Settings className="size-3" />
-            <span>Settings & Info</span>
+            <span className="hidden sm:inline">Settings & Info</span>
+            <span className="sm:hidden">Settings</span>
           </button>
         )}
       </div>

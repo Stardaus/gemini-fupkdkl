@@ -4,6 +4,7 @@ import { useTheme } from './hooks/useTheme';
 import { useRecentMeds } from './hooks/useRecentMeds';
 import { useDisclaimer } from './hooks/useDisclaimer';
 import { usePWAInstall } from './hooks/usePWAInstall';
+import { useOrientationLock } from './hooks/useOrientationLock';
 import { FormularyQueryEngine } from './services/formularyQueryEngine';
 import { Medication, FilterCategory } from './types/formulary';
 
@@ -34,6 +35,7 @@ export default function App() {
     dismissBanner,
     closeIOSModal,
   } = usePWAInstall();
+  const { isPortraitLocked, togglePortraitLock } = useOrientationLock();
 
   const {
     medications,
@@ -79,7 +81,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="h-dvh max-h-dvh overflow-hidden flex flex-col pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)] sm:h-auto sm:max-h-none sm:overflow-visible min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans selection:bg-brand-500 selection:text-white transition-colors duration-200">
+    <div className="h-dvh max-h-dvh overflow-hidden flex flex-col pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)] bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans selection:bg-brand-500 selection:text-white transition-colors duration-200">
       {/* PWA App Shell Code Update Banner */}
       <PWAUpdatePrompt />
 
@@ -104,7 +106,7 @@ export default function App() {
         onClose={closeIOSModal}
       />
 
-      <main className="flex-1 flex flex-col min-h-0 max-w-4xl w-full mx-auto p-3.5 sm:p-6 space-y-3 sm:space-y-5">
+      <main className="flex-1 flex flex-col min-h-0 max-w-4xl w-full mx-auto pt-3.5 px-3.5 pb-0 sm:pt-6 sm:px-6 sm:pb-0 space-y-3 sm:space-y-5">
         {/* Top Controls Container */}
         <div className="shrink-0 space-y-2.5 sm:space-y-3">
           <Header
@@ -177,6 +179,8 @@ export default function App() {
           onCheckUpdate={refreshData}
           theme={theme}
           onToggleTheme={toggleTheme}
+          isPortraitLocked={isPortraitLocked}
+          onTogglePortraitLock={togglePortraitLock}
         />
 
         {/* Data Update Completion Toast */}
@@ -186,9 +190,10 @@ export default function App() {
           onDismiss={dismissSuccessToast}
         />
 
-        {/* Minimal Footnote */}
-        <Footer onOpenSettings={() => setIsSettingsOpen(true)} />
       </main>
+
+      {/* Minimal Footnote */}
+      <Footer onOpenSettings={() => setIsSettingsOpen(true)} />
     </div>
   );
 }

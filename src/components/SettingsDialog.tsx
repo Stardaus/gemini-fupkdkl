@@ -12,6 +12,8 @@ import {
   ShieldCheck,
   Wifi,
   WifiOff,
+  Lock,
+  Unlock,
 } from 'lucide-react';
 import { VersionInfo } from '../types/formulary';
 import { Theme } from '../hooks/useTheme';
@@ -24,6 +26,8 @@ export interface SettingsDialogProps {
   onCheckUpdate: () => Promise<CheckUpdateResult | void> | void;
   theme: Theme;
   onToggleTheme: () => void;
+  isPortraitLocked: boolean;
+  onTogglePortraitLock: () => void;
 }
 
 type CheckState = 'idle' | 'checking' | 'up-to-date' | 'error';
@@ -35,6 +39,8 @@ export function SettingsDialog({
   onCheckUpdate,
   theme,
   onToggleTheme,
+  isPortraitLocked,
+  onTogglePortraitLock,
 }: SettingsDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [checkState, setCheckState] = useState<CheckState>('idle');
@@ -216,12 +222,39 @@ export function SettingsDialog({
             <div
               className={`p-2.5 rounded-xl border flex items-center justify-center ${
                 isOnline
-                  ? 'bg-brand-500/10 text-brand-600 dark:text-brand-400 border-brand-500/30'
+                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
                   : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30'
               }`}
             >
               {isOnline ? <Wifi className="size-5" /> : <WifiOff className="size-5" />}
             </div>
+          </div>
+
+          {/* Portrait Lock Toggle Card */}
+          <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 rounded-xl flex items-center justify-between sm:col-span-2">
+            <div className="space-y-0.5 pr-2">
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block">
+                Portrait Orientation Lock
+              </span>
+              <span className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                {isPortraitLocked ? 'Locked (Recommended)' : 'Unlocked'}
+              </span>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 max-w-[240px]">
+                Prevents the app from auto-rotating in PWA mode.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={onTogglePortraitLock}
+              aria-label={`Toggle portrait orientation lock (currently ${isPortraitLocked ? 'locked' : 'unlocked'})`}
+              className={`p-2.5 rounded-xl border flex items-center justify-center transition-all active:scale-95 min-w-[44px] min-h-[44px] cursor-pointer shadow-xs shrink-0 ${
+                isPortraitLocked
+                  ? 'bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 border-brand-500/30'
+                  : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
+              }`}
+            >
+              {isPortraitLocked ? <Lock className="size-5" /> : <Unlock className="size-5" />}
+            </button>
           </div>
         </div>
 
