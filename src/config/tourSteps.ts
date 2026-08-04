@@ -1,0 +1,62 @@
+import { TourStep } from '../types/tour';
+
+export const TOUR_STEPS: TourStep[] = [
+  {
+    id: 'search-bar',
+    targetSelector: '[data-tour="search-bar"]',
+    placement: 'bottom',
+    title: 'Search Medications',
+    description: 'Quickly find medications by generic name, brand name, MAL registration number, or MDC code.',
+    advanceOn: 'next',
+  },
+  {
+    id: 'recent-meds',
+    targetSelector: '[data-tour="recent-meds"]',
+    placement: 'bottom',
+    title: 'Recent Searches',
+    description: 'Your recently viewed medications appear here for instant access.',
+    advanceOn: 'next',
+  },
+  {
+    id: 'quick-filters',
+    targetSelector: '[data-tour="quick-filters"]',
+    placement: 'bottom',
+    title: 'Quick Category Filters',
+    description: 'Filter medications instantly by Quota Drugs, NEML status, or clinical system groups.',
+    advanceOn: 'next',
+  },
+  {
+    id: 'medication-list',
+    targetSelector: '[data-tour="medication-card"]',
+    placement: 'bottom',
+    title: 'Medication List',
+    description: 'Tap any medication card to view its complete prescribing restrictions, indications, and dosage.',
+    advanceOn: 'action',
+    actionHint: 'Tap a medication card to continue',
+  },
+  {
+    id: 'medication-detail',
+    targetSelector: '[data-tour="medication-detail-content"]',
+    placement: 'center',
+    title: 'Clinical Details',
+    description: 'Review official prescribing guidelines, MOH category, quota status, and adverse reactions in depth.',
+    advanceOn: 'next',
+  },
+  {
+    id: 'footer-settings',
+    targetSelector: '[data-tour="footer-settings"]',
+    placement: 'top',
+    title: 'Settings & Information',
+    description: 'Access app preferences, theme controls, data update checks, and portrait lock settings.',
+    advanceOn: 'action',
+    actionHint: 'Tap Settings to continue',
+  },
+  {
+    id: 'settings-dialog',
+    targetSelector: '[data-tour="settings-dialog-content"]',
+    placement: 'center',
+    title: 'App Configuration',
+    description: 'Customize appearance, toggle portrait lock, check for live database updates, or replay this tour anytime.',
+    advanceOn: 'next',
+  },
+];

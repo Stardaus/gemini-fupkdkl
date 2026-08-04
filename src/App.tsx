@@ -1,10 +1,11 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useFormularyData } from './hooks/useFormularyData';
 import { useTheme } from './hooks/useTheme';
 import { useRecentMeds } from './hooks/useRecentMeds';
 import { useDisclaimer } from './hooks/useDisclaimer';
 import { usePWAInstall } from './hooks/usePWAInstall';
 import { useOrientationLock } from './hooks/useOrientationLock';
+import { useTour } from './hooks/useTour';
 import { FormularyQueryEngine } from './services/formularyQueryEngine';
 import { Medication, FilterCategory } from './types/formulary';
 
@@ -21,6 +22,7 @@ import { InstallBanner } from './components/InstallBanner';
 import { IOSInstallDialog } from './components/IOSInstallDialog';
 import { Footer } from './components/Footer';
 import { SettingsDialog } from './components/SettingsDialog';
+import { TourGuide } from './components/TourGuide';
 import { Loader2 } from 'lucide-react';
 
 export default function App() {
@@ -36,6 +38,19 @@ export default function App() {
     closeIOSModal,
   } = usePWAInstall();
   const { isPortraitLocked, togglePortraitLock } = useOrientationLock();
+
+  const {
+    isActive: isTourActive,
+    currentStep: tourStep,
+    currentStepIndex: tourStepIndex,
+    totalSteps: tourTotalSteps,
+    shouldAutoStart: shouldTourAutoStart,
+    start: startTour,
+    next: nextTourStep,
+    back: backTourStep,
+    skip: skipTour,
+    complete: completeTour,
+  } = useTour();
 
   const {
     medications,
@@ -68,6 +83,27 @@ export default function App() {
     [queryEngine, searchQuery, activeFilter]
   );
 
+  // Trigger tour automatically after disclaimer acceptance if not completed
+  useEffect(() => {
+    if (hasAccepted && shouldTourAutoStart && !isTourActive && !isLoading) {
+      startTour();
+    }
+  }, [hasAccepted, shouldTourAutoStart, isTourActive, isLoading, startTour]);
+
+  // Action-gated step 4: advance when medication detail dialog opens
+  useEffect(() => {
+    if (isTourActive && tourStepIndex === 3 && selectedMedication) {
+      nextTourStep();
+    }
+  }, [isTourActive, tourStepIndex, selectedMedication, nextTourStep]);
+
+  // Action-gated step 6: advance when settings dialog opens
+  useEffect(() => {
+    if (isTourActive && tourStepIndex === 5 && isSettingsOpen) {
+      nextTourStep();
+    }
+  }, [isTourActive, tourStepIndex, isSettingsOpen, nextTourStep]);
+
   const handleSelectMedication = useCallback(
     (med: Medication) => {
       setSelectedMedication(med);
@@ -79,6 +115,14 @@ export default function App() {
   const handleCloseDialog = useCallback(() => {
     setSelectedMedication(null);
   }, []);
+
+  const handleTourNext = useCallback(() => {
+    // If moving away from step 5 (medication detail), close the detail dialog
+    if (tourStepIndex === 4) {
+      setSelectedMedication(null);
+    }
+    nextTourStep();
+  }, [tourStepIndex, nextTourStep]);
 
   return (
     <div className="h-dvh max-h-dvh overflow-hidden flex flex-col pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)] bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans selection:bg-brand-500 selection:text-white transition-colors duration-200">
@@ -104,6 +148,18 @@ export default function App() {
       <IOSInstallDialog
         isOpen={isIOSModalOpen}
         onClose={closeIOSModal}
+      />
+
+      {/* Interactive Spotlight Tour Overlay */}
+      <TourGuide
+        isActive={isTourActive}
+        currentStep={tourStep}
+        currentStepIndex={tourStepIndex}
+        totalSteps={tourTotalSteps}
+        onNext={handleTourNext}
+        onBack={backTourStep}
+        onSkip={skipTour}
+        onComplete={completeTour}
       />
 
       <main className="flex-1 flex flex-col min-h-0 max-w-4xl w-full mx-auto pt-3.5 px-3.5 pb-0 sm:pt-6 sm:px-6 sm:pb-0 space-y-3 sm:space-y-5">
@@ -183,6 +239,7 @@ export default function App() {
             isLocked: isPortraitLocked,
             onToggle: togglePortraitLock,
           }}
+          onReplayTour={startTour}
         />
 
         {/* Data Update Completion Toast */}

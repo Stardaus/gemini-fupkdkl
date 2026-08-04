@@ -25,6 +25,7 @@ export function MedicationCard({ medication, onSelect }: MedicationCardProps) {
       }}
       aria-label={`View details for ${name}`}
       className={containerClasses}
+      data-tour="medication-card"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="space-y-1.5 flex-1 min-w-0">

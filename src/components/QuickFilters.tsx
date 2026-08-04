@@ -19,6 +19,7 @@ export function QuickFilters({
       role="region"
       aria-label="Medication category filters"
       className="flex items-center gap-2.5 overflow-x-auto pb-1 scrollbar-none"
+      data-tour="quick-filters"
     >
       <button
         type="button"

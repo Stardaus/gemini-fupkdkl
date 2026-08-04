@@ -59,6 +59,7 @@ describe('Formulari App integration', () => {
   beforeEach(async () => {
     await clearDB();
     localStorage.clear();
+    localStorage.setItem('fupkdkl_tour_completed', 'true');
     vi.restoreAllMocks();
   });
 
@@ -136,5 +137,27 @@ describe('Formulari App integration', () => {
     expect(mainElement?.parentElement).toBe(footerElement?.parentElement);
     // Assert footer is not inside main
     expect(mainElement?.contains(footerElement)).toBe(false);
+  });
+
+  it('automatically launches tour on first launch when tour completion key is absent', async () => {
+    localStorage.removeItem('fupkdkl_tour_completed');
+    render(<App />);
+
+    const acceptBtn = await screen.findByRole('button', {
+      name: /I Understand & Agree/i,
+    });
+    fireEvent.click(acceptBtn);
+
+    // Assert Tour step 1 is rendered
+    await waitFor(() => {
+      expect(screen.getByText('Search Medications')).toBeInTheDocument();
+    });
+    expect(screen.getByText('Step 1 of 7')).toBeInTheDocument();
+
+    // Skip tour
+    const skipBtn = screen.getByRole('button', { name: /Skip Tour/i });
+    fireEvent.click(skipBtn);
+
+    expect(localStorage.getItem('fupkdkl_tour_completed')).toBe('true');
   });
 });

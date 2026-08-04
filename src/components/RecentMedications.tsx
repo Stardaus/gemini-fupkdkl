@@ -15,7 +15,7 @@ export function RecentMedications({
   if (!recentMeds || recentMeds.length === 0) return null;
 
   return (
-    <div className="bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200/80 dark:border-slate-700/60 rounded-xl p-2.5 sm:p-3 space-y-2 shadow-xs">
+    <div className="bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200/80 dark:border-slate-700/60 rounded-xl p-2.5 sm:p-3 space-y-2 shadow-xs" data-tour="recent-meds">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
           <Clock className="size-3.5 text-brand-600 dark:text-brand-400" aria-hidden="true" />

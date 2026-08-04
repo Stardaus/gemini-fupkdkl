@@ -145,7 +145,7 @@ export function MedicationDetailDialog({
       </div>
 
       {/* Scrollable Content Body */}
-      <div className="flex-1 min-h-0 overflow-y-auto p-5 space-y-5 text-sm">
+      <div className="flex-1 min-h-0 overflow-y-auto p-5 space-y-5 text-sm" data-tour="medication-detail-content">
         {/* MAL Registration & Metadata */}
         <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 rounded-xl p-4 space-y-2">
           <div className="flex flex-wrap items-center justify-between gap-2">

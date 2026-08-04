@@ -45,7 +45,7 @@ export function SearchBar({
   const showDropdown = isFocused && !value && recentMeds && recentMeds.length > 0;
 
   return (
-    <div className="relative w-full z-20">
+    <div className="relative w-full z-20" data-tour="search-bar">
       <form
         role="search"
         aria-label="Medication search form"

@@ -35,6 +35,7 @@ export function Footer({ onOpenSettings }: FooterProps) {
           <button
             type="button"
             onClick={onOpenSettings}
+            data-tour="footer-settings"
             className="shrink-0 inline-flex items-center gap-1 font-medium text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400 transition-colors cursor-pointer min-h-[44px] px-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
           >
             <Settings className="size-3" aria-hidden="true" />

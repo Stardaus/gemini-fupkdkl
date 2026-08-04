@@ -14,6 +14,7 @@ import {
   WifiOff,
   Lock,
   Unlock,
+  RotateCcw,
 } from 'lucide-react';
 import { VersionInfo } from '../types/formulary';
 import { Theme } from '../hooks/useTheme';
@@ -35,6 +36,7 @@ export interface SettingsDialogProps {
     isLocked: boolean;
     onToggle: () => void;
   };
+  onReplayTour?: () => void;
 }
 
 type CheckState = 'idle' | 'checking' | 'up-to-date' | 'error';
@@ -47,6 +49,7 @@ export function SettingsDialog({
   theme,
   onToggleTheme,
   orientationLock,
+  onReplayTour,
 }: SettingsDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [checkState, setCheckState] = useState<CheckState>('idle');
@@ -188,7 +191,7 @@ export function SettingsDialog({
       </div>
 
       {/* Body Content */}
-      <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-5 space-y-4 text-sm">
+      <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-5 space-y-4 text-sm" data-tour="settings-dialog-content">
         {/* Network & Theme Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* Theme Toggle Card */}
@@ -262,6 +265,34 @@ export function SettingsDialog({
               {orientationLock.isLocked ? <Lock className="size-5" aria-hidden="true" /> : <Unlock className="size-5" aria-hidden="true" />}
             </button>
           </div>
+
+          {/* Replay App Tour Card */}
+          {onReplayTour && (
+            <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 rounded-xl flex items-center justify-between sm:col-span-2">
+              <div className="space-y-0.5 pr-2">
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block">
+                  Interactive App Tour
+                </span>
+                <span className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                  Replay Feature Walkthrough
+                </span>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 max-w-[240px]">
+                  Restart the interactive spotlight tour of features and navigation.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onReplayTour();
+                }}
+                aria-label="Replay interactive app tour"
+                className="p-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-brand-500/50 rounded-xl text-slate-700 dark:text-slate-300 hover:text-brand-600 transition-all active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer shadow-xs shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+              >
+                <RotateCcw className="size-5 text-brand-600 dark:text-brand-400" aria-hidden="true" />
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Database & App Version Information */}
