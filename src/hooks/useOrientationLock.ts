@@ -4,7 +4,6 @@ const STORAGE_KEY = 'fupkdkl_portrait_lock';
 
 export function useOrientationLock() {
   const [isPortraitLocked, setIsPortraitLocked] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return true;
     const stored = localStorage.getItem(STORAGE_KEY);
     return stored !== null ? stored === 'true' : true;
   });
@@ -12,9 +11,7 @@ export function useOrientationLock() {
   const togglePortraitLock = useCallback(() => {
     setIsPortraitLocked((prev) => {
       const next = !prev;
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(STORAGE_KEY, String(next));
-      }
+      localStorage.setItem(STORAGE_KEY, String(next));
       return next;
     });
   }, []);
@@ -23,16 +20,18 @@ export function useOrientationLock() {
     if (typeof screen === 'undefined' || !screen.orientation) return;
 
     if (isPortraitLocked) {
-      if (typeof screen.orientation.lock === 'function') {
-        screen.orientation.lock('portrait').catch((e) => {
+      const orientation = screen.orientation as any;
+      if (typeof orientation.lock === 'function') {
+        orientation.lock('portrait').catch((e: unknown) => {
           // Silently fail if lock is not supported or rejected (e.g., not in PWA standalone mode)
           console.debug('Orientation lock failed or unsupported:', e);
         });
       }
     } else {
-      if (typeof screen.orientation.unlock === 'function') {
+      const orientation = screen.orientation as any;
+      if (typeof orientation.unlock === 'function') {
         try {
-          screen.orientation.unlock();
+          orientation.unlock();
         } catch (e) {
           console.debug('Orientation unlock failed:', e);
         }

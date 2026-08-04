@@ -179,8 +179,10 @@ export default function App() {
           onCheckUpdate={refreshData}
           theme={theme}
           onToggleTheme={toggleTheme}
-          isPortraitLocked={isPortraitLocked}
-          onTogglePortraitLock={togglePortraitLock}
+          orientationLock={{
+            isLocked: isPortraitLocked,
+            onToggle: togglePortraitLock,
+          }}
         />
 
         {/* Data Update Completion Toast */}

@@ -17,6 +17,7 @@ describe('SettingsDialog component', () => {
         onCheckUpdate={() => {}}
         theme="light"
         onToggleTheme={() => {}}
+        orientationLock={{ isLocked: true, onToggle: () => {} }}
       />
     );
     const dialog = container.querySelector('dialog');
@@ -36,6 +37,7 @@ describe('SettingsDialog component', () => {
         onCheckUpdate={handleCheckUpdate}
         theme="light"
         onToggleTheme={handleToggleTheme}
+        orientationLock={{ isLocked: true, onToggle: () => {} }}
       />
     );
 
@@ -64,6 +66,7 @@ describe('SettingsDialog component', () => {
         onCheckUpdate={handleCheckUpdate}
         theme="dark"
         onToggleTheme={() => {}}
+        orientationLock={{ isLocked: true, onToggle: () => {} }}
       />
     );
 
@@ -88,6 +91,7 @@ describe('SettingsDialog component', () => {
         onCheckUpdate={handleCheckUpdate}
         theme="dark"
         onToggleTheme={() => {}}
+        orientationLock={{ isLocked: true, onToggle: () => {} }}
       />
     );
 
@@ -112,6 +116,7 @@ describe('SettingsDialog component', () => {
         onCheckUpdate={handleCheckUpdate}
         theme="light"
         onToggleTheme={() => {}}
+        orientationLock={{ isLocked: true, onToggle: () => {} }}
       />
     );
 
@@ -134,6 +139,7 @@ describe('SettingsDialog component', () => {
         onCheckUpdate={() => {}}
         theme="light"
         onToggleTheme={() => {}}
+        orientationLock={{ isLocked: true, onToggle: () => {} }}
       />
     );
 

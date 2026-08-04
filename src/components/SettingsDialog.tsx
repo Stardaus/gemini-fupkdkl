@@ -26,8 +26,10 @@ export interface SettingsDialogProps {
   onCheckUpdate: () => Promise<CheckUpdateResult | void> | void;
   theme: Theme;
   onToggleTheme: () => void;
-  isPortraitLocked: boolean;
-  onTogglePortraitLock: () => void;
+  orientationLock: {
+    isLocked: boolean;
+    onToggle: () => void;
+  };
 }
 
 type CheckState = 'idle' | 'checking' | 'up-to-date' | 'error';
@@ -39,8 +41,7 @@ export function SettingsDialog({
   onCheckUpdate,
   theme,
   onToggleTheme,
-  isPortraitLocked,
-  onTogglePortraitLock,
+  orientationLock,
 }: SettingsDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [checkState, setCheckState] = useState<CheckState>('idle');
@@ -222,7 +223,7 @@ export function SettingsDialog({
             <div
               className={`p-2.5 rounded-xl border flex items-center justify-center ${
                 isOnline
-                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
+                  ? 'bg-brand-500/10 text-brand-600 dark:text-brand-400 border-brand-500/30'
                   : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30'
               }`}
             >
@@ -237,7 +238,7 @@ export function SettingsDialog({
                 Portrait Orientation Lock
               </span>
               <span className="text-sm font-bold text-slate-800 dark:text-slate-200">
-                {isPortraitLocked ? 'Locked (Recommended)' : 'Unlocked'}
+                {orientationLock.isLocked ? 'Locked (Recommended)' : 'Unlocked'}
               </span>
               <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 max-w-[240px]">
                 Prevents the app from auto-rotating in PWA mode.
@@ -245,15 +246,15 @@ export function SettingsDialog({
             </div>
             <button
               type="button"
-              onClick={onTogglePortraitLock}
-              aria-label={`Toggle portrait orientation lock (currently ${isPortraitLocked ? 'locked' : 'unlocked'})`}
-              className={`p-2.5 rounded-xl border flex items-center justify-center transition-all active:scale-95 min-w-[44px] min-h-[44px] cursor-pointer shadow-xs shrink-0 ${
-                isPortraitLocked
+              onClick={orientationLock.onToggle}
+              aria-label={`Toggle portrait orientation lock (currently ${orientationLock.isLocked ? 'locked' : 'unlocked'})`}
+              className={`p-2.5 rounded-xl border flex items-center justify-center transition-all active:scale-95 min-w-[44px] min-h-[44px] cursor-pointer shadow-xs shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 ${
+                orientationLock.isLocked
                   ? 'bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 border-brand-500/30'
                   : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
               }`}
             >
-              {isPortraitLocked ? <Lock className="size-5" /> : <Unlock className="size-5" />}
+              {orientationLock.isLocked ? <Lock className="size-5" /> : <Unlock className="size-5" />}
             </button>
           </div>
         </div>

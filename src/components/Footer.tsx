@@ -12,6 +12,12 @@ export interface FooterProps {
   onCheckUpdate?: () => Promise<CheckUpdateResult | void> | void;
   onOpenSettings?: () => void;
 }
+const ResponsiveLabel = ({ full, short }: { full: string; short: string }) => (
+  <>
+    <span className="hidden sm:inline">{full}</span>
+    <span className="sm:hidden">{short}</span>
+  </>
+);
 
 export function Footer({ onOpenSettings }: FooterProps) {
   return (
@@ -29,8 +35,7 @@ export function Footer({ onOpenSettings }: FooterProps) {
           <span className="hidden sm:inline text-slate-400 dark:text-slate-600 shrink-0">•</span>
           <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1 shrink-0">
             <ShieldCheck className="size-3 text-brand-600 dark:text-brand-400" />
-            <span className="hidden sm:inline">Official Clinical Reference Guide</span>
-            <span className="sm:hidden">Official</span>
+            <ResponsiveLabel full="Official Clinical Reference Guide" short="Official" />
           </span>
         </div>
 
@@ -38,11 +43,10 @@ export function Footer({ onOpenSettings }: FooterProps) {
           <button
             type="button"
             onClick={onOpenSettings}
-            className="shrink-0 inline-flex items-center gap-1 font-medium text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400 transition-colors cursor-pointer min-h-[28px] px-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
+            className="shrink-0 inline-flex items-center gap-1 font-medium text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400 transition-colors cursor-pointer min-h-[44px] px-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
           >
             <Settings className="size-3" />
-            <span className="hidden sm:inline">Settings & Info</span>
-            <span className="sm:hidden">Settings</span>
+            <ResponsiveLabel full="Settings & Info" short="Settings" />
           </button>
         )}
       </div>

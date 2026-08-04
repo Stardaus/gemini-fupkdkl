@@ -116,4 +116,25 @@ describe('Formulari App integration', () => {
     fireEvent.click(themeBtn);
     expect(localStorage.getItem('formulary_theme')).toBe('light');
   });
+
+  it('renders Footer as a sibling to main (not inside it)', async () => {
+    const { container } = render(<App />);
+    
+    // Accept disclaimer to render the main app
+    const acceptBtn = await screen.findByRole('button', {
+      name: /I Understand & Agree/i,
+    });
+    fireEvent.click(acceptBtn);
+
+    const mainElement = container.querySelector('main');
+    const footerElement = container.querySelector('footer');
+
+    expect(mainElement).toBeInTheDocument();
+    expect(footerElement).toBeInTheDocument();
+    
+    // Assert they share the same parent and are siblings
+    expect(mainElement?.parentElement).toBe(footerElement?.parentElement);
+    // Assert footer is not inside main
+    expect(mainElement?.contains(footerElement)).toBe(false);
+  });
 });
