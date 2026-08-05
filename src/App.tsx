@@ -13,6 +13,7 @@ import { Header } from './components/Header';
 import { SearchBar } from './components/SearchBar';
 import { QuickFilters } from './components/QuickFilters';
 import { VirtualMedList } from './components/VirtualMedList';
+import { InitialLoadScreen } from './components/InitialLoadScreen';
 import { MedicationDetailDialog } from './components/MedicationDetailDialog';
 import { DisclaimerDialog } from './components/DisclaimerDialog';
 import { UpdateToast } from './components/UpdateToast';
@@ -56,10 +57,12 @@ export default function App() {
     medications,
     versionInfo,
     isLoading,
+    isInitialLoadRequired,
     isDataUpdateAvailable,
     pendingVersion,
     isSuccessToastVisible,
     applyDataUpdate,
+    retryInitialLoad,
     dismissDataUpdatePrompt,
     dismissSuccessToast,
     refreshData,
@@ -85,10 +88,10 @@ export default function App() {
 
   // Trigger tour automatically after disclaimer acceptance if not completed
   useEffect(() => {
-    if (hasAccepted && shouldTourAutoStart && !isTourActive && !isLoading) {
+    if (hasAccepted && shouldTourAutoStart && !isTourActive && !isLoading && !isInitialLoadRequired) {
       startTour();
     }
-  }, [hasAccepted, shouldTourAutoStart, isTourActive, isLoading, startTour]);
+  }, [hasAccepted, shouldTourAutoStart, isTourActive, isLoading, isInitialLoadRequired, startTour]);
 
   // Action-gated step: advance when medication detail dialog opens
   useEffect(() => {
@@ -198,7 +201,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Medication List or Loading Indicator */}
+        {/* Medication List, Loading Indicator, or Initial Load Screen */}
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-12 px-4 space-y-4 text-center">
             <div className="relative">
@@ -213,6 +216,8 @@ export default function App() {
               <span>Loading clinical formulary database...</span>
             </div>
           </div>
+        ) : isInitialLoadRequired ? (
+          <InitialLoadScreen onRetry={retryInitialLoad} />
         ) : (
           <VirtualMedList
             medications={displayedMedications}

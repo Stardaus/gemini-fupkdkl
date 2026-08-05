@@ -119,6 +119,7 @@ describe('Formulari App integration', () => {
   });
 
   it('renders Footer as a sibling to main (not inside it)', async () => {
+    await saveMedications(mockMeds);
     const { container } = render(<App />);
     
     // Accept disclaimer to render the main app
@@ -140,6 +141,7 @@ describe('Formulari App integration', () => {
   });
 
   it('automatically launches tour on first launch when tour completion key is absent', async () => {
+    await saveMedications(mockMeds);
     localStorage.removeItem('fupkdkl_tour_completed');
     render(<App />);
 
@@ -159,5 +161,16 @@ describe('Formulari App integration', () => {
     fireEvent.click(skipBtn);
 
     expect(localStorage.getItem('fupkdkl_tour_completed')).toBe('true');
+  });
+
+  it('renders InitialLoadScreen when IndexedDB is empty and remote fetch fails', async () => {
+    global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
+    render(<App />);
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: /internet connection required/i })
+      ).toBeInTheDocument();
+    });
   });
 });

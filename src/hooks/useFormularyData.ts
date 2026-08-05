@@ -3,20 +3,14 @@ import { Medication, VersionInfo } from '../types/formulary';
 import {
   getAllMedications,
   getStoredVersion,
-  saveMedications,
-  saveStoredVersion,
 } from '../services/db';
-import { parseFormularyCSV } from '../services/csvParser';
-import { FormularySync, computeMedicationsHash } from '../services/formularySync';
-
-const INITIAL_VERSION = '2.0.0-initial';
-const INITIAL_CSV_PATH = `${import.meta.env.BASE_URL}data/formulary_initial.csv`;
+import { FormularySync } from '../services/formularySync';
 
 export const DEFAULT_VERSION_URL =
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFA9lhUhdSk7L_t0XnGtGzrIMw1g9EXrNjmRfaBaQ8naqAy7ua8r_lpeth-LPQQS2pOMlKKSbvYQuB/pub?gid=411569782&single=true&output=csv';
 
 export const DEFAULT_DATA_URL =
-  'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFA9lhUhdSk7L_t0XnGtGzrIMw1g9EXrNjmRfaBaQ8naqAy7ua8r_lpeth-LPQQS2pOMlKKSbvYQuB/pub?output=csv';
+  'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFA9lhUhdSk7L_t0XnGtGzrIMw1g9EXrNjmRfaBaQ8naqAy7ua8r_lpeth-LPQQS2pOMlKKSbvYQuB/pub?gid=1786132140&single=true&output=csv';
 
 export interface UseFormularyDataOptions {
   versionUrl?: string;
@@ -39,55 +33,44 @@ export function useFormularyData(options: UseFormularyDataOptions = {}) {
   const [medications, setMedications] = useState<Medication[]>([]);
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isInitialLoadRequired, setIsInitialLoadRequired] = useState<boolean>(false);
   const [isDataUpdateAvailable, setIsDataUpdateAvailable] = useState<boolean>(false);
   const [pendingVersion, setPendingVersion] = useState<string | null>(null);
   const [isSuccessToastVisible, setIsSuccessToastVisible] = useState<boolean>(false);
 
-  // Seed database from bundled CSV if DB is empty
-  const loadInitialSeed = useCallback(async (): Promise<Medication[]> => {
-    try {
-      const response = await fetch(INITIAL_CSV_PATH);
-      if (!response.ok) return [];
-      const csvText = await response.text();
-      const parsedMeds = parseFormularyCSV(csvText);
+  // Fetch remote data and seed IndexedDB for the very first launch
+  const loadFromRemote = useCallback(async (): Promise<Medication[]> => {
+    const targetVer = `remote-${Date.now()}`;
+    const { medications: remoteMeds, versionInfo: remoteVerInfo } =
+      await syncService.syncData(targetVer);
+    setVersionInfo(remoteVerInfo);
+    return remoteMeds;
+  }, [syncService]);
 
-      if (parsedMeds.length > 0) {
-        await saveMedications(parsedMeds);
-        const hash = computeMedicationsHash(parsedMeds);
-        const vInfo: VersionInfo = {
-          version: INITIAL_VERSION,
-          contentHash: hash,
-          lastChecked: Date.now(),
-        };
-        await saveStoredVersion(vInfo);
-        setVersionInfo(vInfo);
-      }
-      return parsedMeds;
-    } catch {
-      return [];
-    }
-  }, []);
-
-  // Step 1: Fast local load from IndexedDB (< 15ms)
+  // Step 1: Fast local load from IndexedDB (<15ms); network-seed if empty
   const initializeData = useCallback(async () => {
     setIsLoading(true);
+    setIsInitialLoadRequired(false);
     try {
-      let cachedMeds = await getAllMedications();
-      let version = await getStoredVersion();
+      const cachedMeds = await getAllMedications();
+      const version = await getStoredVersion();
 
-      if (!cachedMeds || cachedMeds.length === 0) {
-        cachedMeds = await loadInitialSeed();
-        version = await getStoredVersion();
+      if (cachedMeds && cachedMeds.length > 0) {
+        setMedications(cachedMeds);
+        setVersionInfo(version);
+        return;
       }
 
-      setMedications(cachedMeds);
-      setVersionInfo(version);
+      // DB is empty — first launch, must seed from remote
+      const remoteMeds = await loadFromRemote();
+      setMedications(remoteMeds);
     } catch {
-      // Non-fatal init
+      // Network unavailable or fetch failure — surface the "internet required" state
+      setIsInitialLoadRequired(true);
     } finally {
       setIsLoading(false);
     }
-  }, [loadInitialSeed]);
+  }, [loadFromRemote]);
 
   // Step 2: Background version sentinel check
   const runVersionSentinel = useCallback(async (): Promise<{
@@ -142,6 +125,20 @@ export function useFormularyData(options: UseFormularyDataOptions = {}) {
     }
   }, [pendingVersion, syncService, versionInfo]);
 
+  // Retry triggered by the user from the InitialLoadScreen
+  const retryInitialLoad = useCallback(async () => {
+    setIsLoading(true);
+    setIsInitialLoadRequired(false);
+    try {
+      const remoteMeds = await loadFromRemote();
+      setMedications(remoteMeds);
+    } catch {
+      setIsInitialLoadRequired(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [loadFromRemote]);
+
   const dismissDataUpdatePrompt = useCallback(() => {
     setIsDataUpdateAvailable(false);
   }, []);
@@ -175,10 +172,12 @@ export function useFormularyData(options: UseFormularyDataOptions = {}) {
     medications,
     versionInfo,
     isLoading,
+    isInitialLoadRequired,
     isDataUpdateAvailable,
     pendingVersion,
     isSuccessToastVisible,
     applyDataUpdate,
+    retryInitialLoad,
     dismissDataUpdatePrompt,
     dismissSuccessToast,
     refreshData: runVersionSentinel,
