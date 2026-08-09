@@ -176,8 +176,8 @@ describe('IntroPage component', () => {
       />
     );
 
-    const screenshotBtn = screen.getByRole('button', { name: /Multi-Field Instant Search/i });
-    fireEvent.click(screenshotBtn);
+    const screenshotBtns = screen.getAllByRole('button', { name: /Multi-Field Instant Search/i });
+    fireEvent.click(screenshotBtns[0]);
 
     const activeImage = screen.getByAltText('Multi-Field Instant Search');
     expect(activeImage).toBeInTheDocument();

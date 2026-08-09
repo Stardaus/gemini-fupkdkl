@@ -592,9 +592,27 @@ export function IntroPage({
             </p>
           </div>
 
+          {/* MOBILE HORIZONTAL PILL SELECTOR (Mobile Viewports < 1024px) */}
+          <div className="flex lg:hidden overflow-x-auto pb-2 gap-2 scrollbar-none mb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+            {screenshots.map((item, index) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setActiveScreenshotIndex(index)}
+                className={`shrink-0 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  activeScreenshotIndex === index
+                    ? 'bg-brand-600 text-white shadow-sm border border-brand-500/40'
+                    : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                <span>{item.title}</span>
+              </button>
+            ))}
+          </div>
+
           <div className="grid lg:grid-cols-12 gap-8 items-center">
-            {/* Screenshot Thumbnail List */}
-            <div className="lg:col-span-5 space-y-2.5">
+            {/* Screenshot Thumbnail List (Desktop Viewports >= 1024px) */}
+            <div className="hidden lg:block lg:col-span-5 space-y-2.5">
               {screenshots.map((item, index) => (
                 <button
                   key={item.id}
