@@ -17,7 +17,6 @@ interface TourTooltipProps {
 const MARGIN = 16;
 const PADDING_HORIZONTAL = 32;
 const MAX_TOOLTIP_WIDTH = 340;
-const MIN_TOP_OFFSET = 200;
 
 export function TourTooltip({
   step,
