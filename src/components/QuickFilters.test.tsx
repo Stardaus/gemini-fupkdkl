@@ -14,10 +14,10 @@ describe('QuickFilters component', () => {
       />
     );
 
-    expect(screen.getByText('All Medications')).toBeInTheDocument();
-    expect(screen.getByText('Quota Drugs')).toBeInTheDocument();
+    expect(screen.getByText(/All Medications/i)).toBeInTheDocument();
+    expect(screen.getByText(/Quota Drugs/i)).toBeInTheDocument();
 
-    const quotaBtn = screen.getByRole('button', { name: /Quota Drugs/i });
+    const quotaBtn = screen.getByRole('button', { name: /Filter by Quota Control Drugs/i });
     fireEvent.click(quotaBtn);
     expect(handleSelect).toHaveBeenCalledWith('QUOTA_ONLY');
   });

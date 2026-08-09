@@ -98,7 +98,7 @@ describe('Formulari App integration', () => {
     fireEvent.click(clearSearchBtn);
 
     // 5. Quick filter toggle with Quota Drugs label
-    const quotaFilterBtn = screen.getByRole('button', { name: /Quota Drugs/i });
+    const quotaFilterBtn = screen.getByRole('button', { name: /Quota/i });
     fireEvent.click(quotaFilterBtn);
 
     expect(screen.getByText('Perindopril Erbumine 4mg')).toBeInTheDocument();
