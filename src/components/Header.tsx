@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Sun, Moon, Wifi, WifiOff, Download, Settings } from 'lucide-react';
+import { Sun, Moon, Wifi, WifiOff, Download, Settings, BookOpen } from 'lucide-react';
 import { Theme } from '../hooks/useTheme';
 
 export interface HeaderProps {
@@ -8,9 +8,10 @@ export interface HeaderProps {
   isInstallable?: boolean;
   onInstallApp?: () => void;
   onOpenSettings?: () => void;
+  onOpenIntro?: () => void;
 }
 
-export function Header({ theme, onToggleTheme, isInstallable, onInstallApp, onOpenSettings }: HeaderProps) {
+export function Header({ theme, onToggleTheme, isInstallable, onInstallApp, onOpenSettings, onOpenIntro }: HeaderProps) {
   const [isOnline, setIsOnline] = useState<boolean>(
     typeof navigator !== 'undefined' ? navigator.onLine : true
   );
@@ -71,6 +72,19 @@ export function Header({ theme, onToggleTheme, isInstallable, onInstallApp, onOp
             </>
           )}
         </span>
+
+        {/* Guide & Info Link */}
+        {onOpenIntro && (
+          <button
+            type="button"
+            onClick={onOpenIntro}
+            aria-label="Open App Overview and Installation Guide"
+            title="Overview & Guide"
+            className="min-h-[44px] min-w-[44px] p-2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-300 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-300 rounded-xl transition-all active:scale-95 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 cursor-pointer flex items-center justify-center"
+          >
+            <BookOpen className="size-5 text-brand-600 dark:text-brand-400" aria-hidden="true" />
+          </button>
+        )}
 
         {/* Install App Button */}
         {isInstallable && (

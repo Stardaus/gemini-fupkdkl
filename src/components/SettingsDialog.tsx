@@ -15,6 +15,7 @@ import {
   Lock,
   Unlock,
   RotateCcw,
+  BookOpen,
 } from 'lucide-react';
 import { VersionInfo } from '../types/formulary';
 import { Theme } from '../hooks/useTheme';
@@ -37,6 +38,7 @@ export interface SettingsDialogProps {
     onToggle: () => void;
   };
   onReplayTour?: () => void;
+  onOpenIntro?: () => void;
 }
 
 type CheckState = 'idle' | 'checking' | 'up-to-date' | 'error';
@@ -50,6 +52,7 @@ export function SettingsDialog({
   onToggleTheme,
   orientationLock,
   onReplayTour,
+  onOpenIntro,
 }: SettingsDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [checkState, setCheckState] = useState<CheckState>('idle');
@@ -290,6 +293,34 @@ export function SettingsDialog({
                 className="p-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-brand-500/50 rounded-xl text-slate-700 dark:text-slate-300 hover:text-brand-600 transition-all active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer shadow-xs shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
               >
                 <RotateCcw className="size-5 text-brand-600 dark:text-brand-400" aria-hidden="true" />
+              </button>
+            </div>
+          )}
+
+          {/* Intro Landing Page Card */}
+          {onOpenIntro && (
+            <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 rounded-xl flex items-center justify-between sm:col-span-2">
+              <div className="space-y-0.5 pr-2">
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 block">
+                  Documentation & Setup
+                </span>
+                <span className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                  App Overview & PWA Install Guide
+                </span>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 max-w-[240px]">
+                  View the full clinical feature overview, live search demo, and mobile PWA setup steps.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onOpenIntro();
+                }}
+                aria-label="Open App Overview and Installation Guide"
+                className="p-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-brand-500/50 rounded-xl text-slate-700 dark:text-slate-300 hover:text-brand-600 transition-all active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer shadow-xs shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+              >
+                <BookOpen className="size-5 text-brand-600 dark:text-brand-400" aria-hidden="true" />
               </button>
             </div>
           )}

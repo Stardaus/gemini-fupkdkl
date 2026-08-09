@@ -25,6 +25,7 @@ import { Footer } from './components/Footer';
 import { SettingsDialog } from './components/SettingsDialog';
 import { TourGuide } from './components/TourGuide';
 import { TourInviteBanner } from './components/TourInviteBanner';
+import { IntroPage } from './components/IntroPage';
 import { Loader2 } from 'lucide-react';
 
 export default function App() {
@@ -40,6 +41,30 @@ export default function App() {
     closeIOSModal,
   } = usePWAInstall();
   const { isPortraitLocked, togglePortraitLock } = useOrientationLock();
+
+  const [currentPath, setCurrentPath] = useState<string>(
+    typeof window !== 'undefined' ? window.location.pathname : '/'
+  );
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPath(window.location.pathname);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigateTo = useCallback((path: string) => {
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', path);
+      setCurrentPath(path);
+    }
+  }, []);
+
+  const isIntroRoute =
+    currentPath.endsWith('/intro') ||
+    currentPath.endsWith('/intro/') ||
+    currentPath.includes('/intro');
 
   const {
     isActive: isTourActive,
@@ -136,6 +161,17 @@ export default function App() {
     nextTourStep();
   }, [tourStep, nextTourStep]);
 
+  if (isIntroRoute) {
+    return (
+      <IntroPage
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        onLaunchApp={() => navigateTo(import.meta.env.BASE_URL)}
+        medications={medications}
+      />
+    );
+  }
+
   return (
     <div className="h-dvh max-h-dvh overflow-hidden flex flex-col pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)] bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans selection:bg-brand-500 selection:text-white transition-colors duration-200">
       {/* PWA App Shell Code Update Banner */}
@@ -183,6 +219,7 @@ export default function App() {
             isInstallable={isInstallable}
             onInstallApp={promptInstall}
             onOpenSettings={() => setIsSettingsOpen(true)}
+            onOpenIntro={() => navigateTo(`${import.meta.env.BASE_URL}intro`)}
           />
 
           {/* Interactive Feature Tour Invitation */}
@@ -261,6 +298,7 @@ export default function App() {
             onToggle: togglePortraitLock,
           }}
           onReplayTour={startTour}
+          onOpenIntro={() => navigateTo(`${import.meta.env.BASE_URL}intro`)}
         />
 
         {/* Data Update Completion Toast */}
