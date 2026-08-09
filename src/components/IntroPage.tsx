@@ -120,18 +120,19 @@ export function IntroPage({
             onClick={onLaunchApp}
             className="flex items-center gap-3 group text-left cursor-pointer"
           >
-            <div className="size-10 rounded-xl bg-brand-600 flex items-center justify-center text-white shadow-md shadow-brand-600/30 group-hover:scale-105 transition-transform shrink-0">
-              <Pill className="size-6" />
+            <div className="p-1 bg-brand-500/10 dark:bg-brand-500/15 rounded-2xl border border-brand-500/25 shadow-sm shrink-0 overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform">
+              <img
+                src={`${import.meta.env.BASE_URL}icon-192.png`}
+                alt="PKDKL Formulary Logo"
+                className="size-9 sm:size-10 object-contain rounded-xl"
+              />
             </div>
             <div>
-              <h1 className="font-bold text-base leading-tight text-slate-900 dark:text-white flex items-center gap-2">
-                District Drug Formulary
-                <span className="text-[10px] bg-brand-500/10 text-brand-600 dark:text-brand-400 font-semibold px-2 py-0.5 rounded-full border border-brand-500/20">
-                  PWA v2.0
-                </span>
+              <h1 className="font-extrabold text-base sm:text-lg leading-tight text-slate-900 dark:text-white tracking-tight">
+                District Drug Formulary <span className="text-brand-600 dark:text-brand-400">PKD Kuala Langat</span>
               </h1>
-              <p className="text-xs text-brand-600 dark:text-brand-400 font-medium">
-                PKD Kuala Langat
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                Pejabat Kesihatan Daerah Kuala Langat
               </p>
             </div>
           </button>
@@ -260,8 +261,12 @@ export function IntroPage({
                     {/* Header in Phone */}
                     <div className="flex items-center justify-between pb-3">
                       <div className="flex items-center gap-2">
-                        <div className="size-8 rounded-lg bg-brand-600 flex items-center justify-center text-white">
-                          <Pill className="size-4" />
+                        <div className="p-0.5 bg-brand-500/10 rounded-lg border border-brand-500/25 shrink-0 overflow-hidden flex items-center justify-center">
+                          <img
+                            src={`${import.meta.env.BASE_URL}icon-192.png`}
+                            alt="PKDKL Formulary Logo"
+                            className="size-7 object-contain rounded-md"
+                          />
                         </div>
                         <div>
                           <p className="font-bold text-xs leading-none">District Drug Formulary</p>
@@ -806,24 +811,27 @@ export function IntroPage({
       <footer className="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 transition-colors py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="size-8 rounded-lg bg-brand-600 flex items-center justify-center text-white">
-              <Pill className="size-4" />
+            <div className="p-1 bg-brand-500/10 dark:bg-brand-500/15 rounded-xl border border-brand-500/25 shadow-sm shrink-0 overflow-hidden flex items-center justify-center">
+              <img
+                src={`${import.meta.env.BASE_URL}icon-192.png`}
+                alt="PKDKL Formulary Logo"
+                className="size-8 object-contain rounded-lg"
+              />
             </div>
             <div>
-              <p className="font-bold text-sm text-slate-900 dark:text-white">District Drug Formulary</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">© Pejabat Kesihatan Daerah Kuala Langat</p>
+              <p className="font-bold text-sm text-slate-900 dark:text-white">District Drug Formulary PKD Kuala Langat</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Pejabat Kesihatan Daerah Kuala Langat</p>
             </div>
           </div>
 
           <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
-            <span>Formulary PWA <strong className="text-brand-500">v2.0</strong></span>
-            <span>•</span>
             <button
               type="button"
               onClick={onLaunchApp}
-              className="text-brand-600 dark:text-brand-400 hover:underline font-bold cursor-pointer"
+              className="text-brand-600 dark:text-brand-400 hover:underline font-bold cursor-pointer flex items-center gap-1"
             >
-              Launch Main App →
+              <span>Launch Main App</span>
+              <span>→</span>
             </button>
           </div>
         </div>
