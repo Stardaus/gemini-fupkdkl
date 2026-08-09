@@ -58,4 +58,20 @@ describe('Header component', () => {
     fireEvent.click(settingsBtn);
     expect(handleOpenSettings).toHaveBeenCalledTimes(1);
   });
+
+  it('renders and handles Guide button when onOpenIntro is provided', () => {
+    const handleOpenIntro = vi.fn();
+    render(
+      <Header
+        theme="dark"
+        onToggleTheme={() => {}}
+        onOpenIntro={handleOpenIntro}
+      />
+    );
+
+    const guideBtn = screen.getByRole('button', { name: /Open App Overview and Installation Guide/i });
+    expect(guideBtn).toBeInTheDocument();
+    fireEvent.click(guideBtn);
+    expect(handleOpenIntro).toHaveBeenCalledTimes(1);
+  });
 });

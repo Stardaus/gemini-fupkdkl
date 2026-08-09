@@ -181,4 +181,27 @@ describe('Formulari App integration', () => {
       ).toBeInTheDocument();
     });
   });
+
+  it('navigates to /intro via header button and back to / via Launch App', async () => {
+    await saveMedications(mockMeds);
+    render(<App />);
+
+    const acceptBtn = await screen.findByRole('button', {
+      name: /I Understand & Agree/i,
+    });
+    fireEvent.click(acceptBtn);
+
+    const guideBtn = screen.getByRole('button', { name: /Open App Overview and Installation Guide/i });
+    fireEvent.click(guideBtn);
+
+    // Verify IntroPage is rendered
+    expect(await screen.findByText('Try the Live Formulary Search')).toBeInTheDocument();
+
+    // Click Launch App
+    const launchBtns = screen.getAllByRole('button', { name: /Launch App/i });
+    fireEvent.click(launchBtns[0]);
+
+    // Verify Main App is rendered
+    expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
+  });
 });

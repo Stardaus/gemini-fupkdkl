@@ -149,4 +149,28 @@ describe('SettingsDialog component', () => {
       expect(handleClose).toHaveBeenCalled();
     }
   });
+
+  it('triggers onOpenIntro and onClose when App Overview card is clicked', () => {
+    const handleClose = vi.fn();
+    const handleOpenIntro = vi.fn();
+
+    render(
+      <SettingsDialog
+        isOpen={true}
+        onClose={handleClose}
+        versionInfo={mockVersionInfo}
+        onCheckUpdate={() => {}}
+        theme="light"
+        onToggleTheme={() => {}}
+        orientationLock={{ isLocked: true, onToggle: () => {} }}
+        onOpenIntro={handleOpenIntro}
+      />
+    );
+
+    const introBtn = screen.getByRole('button', { name: /Open App Overview and Installation Guide/i });
+    expect(introBtn).toBeInTheDocument();
+    fireEvent.click(introBtn);
+    expect(handleClose).toHaveBeenCalledTimes(1);
+    expect(handleOpenIntro).toHaveBeenCalledTimes(1);
+  });
 });
