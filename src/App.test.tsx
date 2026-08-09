@@ -140,7 +140,7 @@ describe('Formulari App integration', () => {
     expect(mainElement?.contains(footerElement)).toBe(false);
   });
 
-  it('automatically launches tour on first launch when tour completion key is absent', async () => {
+  it('displays tour invite banner on first launch and starts tour when accepted', async () => {
     await saveMedications(mockMeds);
     localStorage.removeItem('fupkdkl_tour_completed');
     render(<App />);
@@ -150,11 +150,19 @@ describe('Formulari App integration', () => {
     });
     fireEvent.click(acceptBtn);
 
+    // Assert Tour invite banner is displayed
+    const inviteHeading = await screen.findByText('New to Formulari PKD Kuala Langat?');
+    expect(inviteHeading).toBeInTheDocument();
+
+    // Click Start Tour
+    const startTourBtn = screen.getByRole('button', { name: /Start Tour/i });
+    fireEvent.click(startTourBtn);
+
     // Assert Tour step 1 is rendered
     await waitFor(() => {
       expect(screen.getByText('Search Medications')).toBeInTheDocument();
     });
-    expect(screen.getByText('Step 1 of 7')).toBeInTheDocument();
+    expect(screen.getByText('Step 1 of 6')).toBeInTheDocument();
 
     // Skip tour
     const skipBtn = screen.getByRole('button', { name: /Skip Tour/i });

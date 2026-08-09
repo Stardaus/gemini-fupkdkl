@@ -82,4 +82,46 @@ describe('useTour hook', () => {
     expect(result.current.isActive).toBe(false);
     expect(localStorage.getItem('fupkdkl_tour_completed')).toBe('true');
   });
+
+  it('dynamically filters steps when isVisible returns false', () => {
+    // When recent-meds is absent from DOM, totalSteps should be 6 instead of 7
+    // and advancing next from step 0 ('search-bar') should go to 'quick-filters'
+    const { result } = renderHook(() => useTour());
+
+    act(() => {
+      result.current.start();
+    });
+
+    expect(result.current.totalSteps).toBe(6);
+    expect(result.current.currentStep?.id).toBe('search-bar');
+
+    act(() => {
+      result.current.next();
+    });
+
+    expect(result.current.currentStep?.id).toBe('quick-filters');
+  });
+
+  it('includes step when element is present in DOM', () => {
+    const el = document.createElement('div');
+    el.setAttribute('data-tour', 'recent-meds');
+    document.body.appendChild(el);
+
+    const { result } = renderHook(() => useTour());
+
+    act(() => {
+      result.current.start();
+    });
+
+    expect(result.current.totalSteps).toBe(7);
+    expect(result.current.currentStep?.id).toBe('search-bar');
+
+    act(() => {
+      result.current.next();
+    });
+
+    expect(result.current.currentStep?.id).toBe('recent-meds');
+
+    document.body.removeChild(el);
+  });
 });

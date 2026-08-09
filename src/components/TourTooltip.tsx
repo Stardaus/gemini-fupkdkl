@@ -42,9 +42,9 @@ export function TourTooltip({
 
   if (rect) {
     const tooltipWidth = Math.min(viewport.width - PADDING_HORIZONTAL, MAX_TOOLTIP_WIDTH);
+    const estimatedHeight = 220;
 
-    let top = rect.top + rect.height + MARGIN;
-    let left = Math.max(
+    const left = Math.max(
       MARGIN,
       Math.min(
         rect.left + rect.width / 2 - tooltipWidth / 2,
@@ -52,11 +52,16 @@ export function TourTooltip({
       )
     );
 
-    if (step.placement === 'top' && rect.top > MIN_TOP_OFFSET) {
-      top = Math.max(MARGIN, rect.top - MIN_TOP_OFFSET);
-    } else if (top + MIN_TOP_OFFSET > viewport.height) {
-      top = Math.max(MARGIN, rect.top - MIN_TOP_OFFSET);
+    let top = rect.top + rect.height + MARGIN;
+    const spaceBelow = viewport.height - (rect.top + rect.height + MARGIN);
+    const spaceAbove = rect.top - MARGIN;
+
+    if (step.placement === 'top' || (spaceBelow < estimatedHeight && spaceAbove >= spaceBelow)) {
+      top = rect.top - estimatedHeight - MARGIN;
     }
+
+    // Bi-directional viewport clamping
+    top = Math.max(MARGIN, Math.min(top, viewport.height - estimatedHeight - MARGIN));
 
     style = {
       top: `${top}px`,

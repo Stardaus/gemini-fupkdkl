@@ -7,6 +7,12 @@ export function useTour() {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
 
+  const getActiveSteps = useCallback(() => {
+    return TOUR_STEPS.filter((step) => (step.isVisible ? step.isVisible() : true));
+  }, []);
+
+  const activeSteps = getActiveSteps();
+
   const shouldAutoStart = useCallback(() => {
     return localStorage.getItem(STORAGE_KEY) === null;
   }, []);
@@ -24,25 +30,26 @@ export function useTour() {
 
   const next = useCallback(() => {
     setCurrentStepIndex((prevIndex) => {
-      if (prevIndex >= TOUR_STEPS.length - 1) {
+      const steps = getActiveSteps();
+      if (prevIndex >= steps.length - 1) {
         finishTour();
         return prevIndex;
       }
       return prevIndex + 1;
     });
-  }, [finishTour]);
+  }, [finishTour, getActiveSteps]);
 
   const back = useCallback(() => {
     setCurrentStepIndex((prevIndex) => Math.max(0, prevIndex - 1));
   }, []);
 
-  const currentStep = TOUR_STEPS[currentStepIndex] || null;
+  const currentStep = activeSteps[currentStepIndex] || null;
 
   return {
     isActive,
     currentStepIndex,
     currentStep,
-    totalSteps: TOUR_STEPS.length,
+    totalSteps: activeSteps.length,
     shouldAutoStart: shouldAutoStart(),
     start,
     next,

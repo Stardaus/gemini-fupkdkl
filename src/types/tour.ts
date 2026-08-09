@@ -9,4 +9,5 @@ export interface TourStep {
   description: string;
   advanceOn: AdvanceMode;
   actionHint?: string;
+  isVisible?: () => boolean;
 }

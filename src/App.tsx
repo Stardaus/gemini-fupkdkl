@@ -24,6 +24,7 @@ import { IOSInstallDialog } from './components/IOSInstallDialog';
 import { Footer } from './components/Footer';
 import { SettingsDialog } from './components/SettingsDialog';
 import { TourGuide } from './components/TourGuide';
+import { TourInviteBanner } from './components/TourInviteBanner';
 import { Loader2 } from 'lucide-react';
 
 export default function App() {
@@ -52,6 +53,8 @@ export default function App() {
     skip: skipTour,
     complete: completeTour,
   } = useTour();
+
+  const [isInviteBannerDismissed, setIsInviteBannerDismissed] = useState<boolean>(false);
 
   const {
     medications,
@@ -86,12 +89,18 @@ export default function App() {
     [queryEngine, searchQuery, activeFilter]
   );
 
-  // Trigger tour automatically after disclaimer acceptance if not completed
-  useEffect(() => {
-    if (hasAccepted && shouldTourAutoStart && !isTourActive && !isLoading && !isInitialLoadRequired) {
-      startTour();
-    }
-  }, [hasAccepted, shouldTourAutoStart, isTourActive, isLoading, isInitialLoadRequired, startTour]);
+  const isTourInviteVisible =
+    hasAccepted &&
+    shouldTourAutoStart &&
+    !isTourActive &&
+    !isLoading &&
+    !isInitialLoadRequired &&
+    !isInviteBannerDismissed;
+
+  const handleDismissTourInvite = useCallback(() => {
+    setIsInviteBannerDismissed(true);
+    skipTour();
+  }, [skipTour]);
 
   // Action-gated step: advance when medication detail dialog opens
   useEffect(() => {
@@ -174,6 +183,13 @@ export default function App() {
             isInstallable={isInstallable}
             onInstallApp={promptInstall}
             onOpenSettings={() => setIsSettingsOpen(true)}
+          />
+
+          {/* Interactive Feature Tour Invitation */}
+          <TourInviteBanner
+            isVisible={isTourInviteVisible}
+            onStartTour={startTour}
+            onDismiss={handleDismissTourInvite}
           />
 
           {/* Disclaimer Dialog for first-time launch */}

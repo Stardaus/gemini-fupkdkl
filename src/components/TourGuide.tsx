@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { TourOverlay } from './TourOverlay';
 import { TourTooltip } from './TourTooltip';
 import { TourStep } from '../types/tour';
@@ -31,20 +32,31 @@ export function TourGuide({
 
   if (!isActive || !currentStep) return null;
 
+  const targetEl =
+    typeof document !== 'undefined' && currentStep.targetSelector
+      ? document.querySelector(currentStep.targetSelector)
+      : null;
+  const dialogAncestor = targetEl ? targetEl.closest('dialog') : null;
+  const isInsideDialog = !!dialogAncestor;
+
+  const tooltipNode = (
+    <TourTooltip
+      step={currentStep}
+      currentStepIndex={currentStepIndex}
+      totalSteps={totalSteps}
+      rect={rect}
+      viewport={viewport}
+      onNext={onNext}
+      onBack={onBack}
+      onSkip={onSkip}
+      onComplete={onComplete}
+    />
+  );
+
   return (
     <>
-      <TourOverlay rect={rect} viewport={viewport} isActive={isActive} />
-      <TourTooltip
-        step={currentStep}
-        currentStepIndex={currentStepIndex}
-        totalSteps={totalSteps}
-        rect={rect}
-        viewport={viewport}
-        onNext={onNext}
-        onBack={onBack}
-        onSkip={onSkip}
-        onComplete={onComplete}
-      />
+      {!isInsideDialog && <TourOverlay rect={rect} viewport={viewport} isActive={isActive} />}
+      {isInsideDialog && dialogAncestor ? createPortal(tooltipNode, dialogAncestor) : tooltipNode}
     </>
   );
 }

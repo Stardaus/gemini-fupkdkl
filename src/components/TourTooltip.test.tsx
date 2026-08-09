@@ -126,4 +126,30 @@ describe('TourTooltip component', () => {
     fireEvent.click(doneBtn);
     expect(handleComplete).toHaveBeenCalledTimes(1);
   });
+
+  it('clamps tooltip position inside visible viewport on small mobile screen', () => {
+    const mobileRect = { top: 620, left: 20, width: 100, height: 40 };
+    const mobileViewport = { width: 375, height: 667 };
+
+    render(
+      <TourTooltip
+        step={{ ...mockStep, placement: 'top' }}
+        currentStepIndex={5}
+        totalSteps={7}
+        rect={mobileRect}
+        viewport={mobileViewport}
+        onNext={() => {}}
+        onBack={() => {}}
+        onSkip={() => {}}
+        onComplete={() => {}}
+      />
+    );
+
+    const tooltip = screen.getByRole('dialog', { name: /Tour step: Search Medications/i });
+    expect(tooltip).toBeInTheDocument();
+    // top should be clamped to at least MARGIN (16) and at most viewport.height - 220 - 16 = 431
+    const topValue = parseInt(tooltip.style.top, 10);
+    expect(topValue).toBeGreaterThanOrEqual(16);
+    expect(topValue).toBeLessThanOrEqual(667 - 16);
+  });
 });

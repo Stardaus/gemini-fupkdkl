@@ -6,7 +6,7 @@ export const TOUR_STEPS: TourStep[] = [
     targetSelector: '[data-tour="search-bar"]',
     placement: 'bottom',
     title: 'Search Medications',
-    description: 'Quickly find medications by generic name, brand name, MAL registration number, or MDC code.',
+    description: 'Quickly find medications by generic name, brand name, MAL registration number, or MDC code. Your recently searched medications will also appear here for quick access.',
     advanceOn: 'next',
   },
   {
@@ -16,6 +16,7 @@ export const TOUR_STEPS: TourStep[] = [
     title: 'Recent Searches',
     description: 'Your recently viewed medications appear here for instant access.',
     advanceOn: 'next',
+    isVisible: () => typeof document !== 'undefined' && !!document.querySelector('[data-tour="recent-meds"]'),
   },
   {
     id: 'quick-filters',
