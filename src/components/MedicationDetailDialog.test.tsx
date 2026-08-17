@@ -123,4 +123,37 @@ describe('MedicationDetailDialog component', () => {
       />
     );
   });
+
+  it('renders NAG Section C recommendation card for antibiotic medications and triggers onOpenNag', () => {
+    const handleClose = vi.fn();
+    const handleOpenNag = vi.fn();
+
+    const amoxicillinMed: Medication = {
+      ...mockMed,
+      id: 'amox-1',
+      name: 'Amoxicillin Trihydrate 500mg Capsule',
+    };
+
+    render(
+      <MedicationDetailDialog
+        medication={amoxicillinMed}
+        isOpen={true}
+        onClose={handleClose}
+        onOpenNag={handleOpenNag}
+      />
+    );
+
+    expect(screen.getByText('NAG Section C Recommendation')).toBeInTheDocument();
+    expect(
+      screen.getByText(/This medication is referenced in the National Antibiotic Guideline/i)
+    ).toBeInTheDocument();
+
+    const pharyngitisBtn = screen.getByRole('button', {
+      name: /Acute Pharyngitis \/ Tonsillitis/i,
+    });
+    fireEvent.click(pharyngitisBtn);
+
+    expect(handleClose).toHaveBeenCalledTimes(1);
+    expect(handleOpenNag).toHaveBeenCalledWith('nag-pharyngitis');
+  });
 });

@@ -9,21 +9,26 @@ import {
   Stethoscope,
   Info,
   Bookmark,
+  ShieldCheck,
+  BookOpen,
 } from 'lucide-react';
 import { Medication } from '../types/formulary';
 import { Quest3Link } from './Quest3Link';
 import { isNoneRestriction } from '../utils/restrictionUtils';
+import { findNagConditionsForMedication } from '../data/nagSectionC';
 
 export interface MedicationDetailDialogProps {
   medication: Medication | null;
   isOpen: boolean;
   onClose: () => void;
+  onOpenNag?: (conditionId?: string) => void;
 }
 
 export function MedicationDetailDialog({
   medication,
   isOpen,
   onClose,
+  onOpenNag,
 }: MedicationDetailDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -167,6 +172,47 @@ export function MedicationDetailDialog({
             </div>
           </div>
         </div>
+
+        {/* NAG Section C Guideline Recommendation (if antibiotic/anti-infective) */}
+        {(() => {
+          const nagConditions = findNagConditionsForMedication(name);
+          if (nagConditions.length === 0) return null;
+
+          return (
+            <div className="bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/30 rounded-xl p-4 space-y-2.5">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="size-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
+                    NAG Section C Recommendation
+                  </span>
+                </div>
+                <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
+                  {nagConditions.length} Outpatient Indication{nagConditions.length > 1 ? 's' : ''}
+                </span>
+              </div>
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+                This medication is referenced in the National Antibiotic Guideline (Section C: Primary Care) for outpatient empirical regimens.
+              </p>
+              <div className="flex items-center gap-1.5 flex-wrap pt-1">
+                {nagConditions.map((cond) => (
+                  <button
+                    key={cond.id}
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onOpenNag?.(cond.id);
+                    }}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs transition-all active:scale-95 cursor-pointer"
+                  >
+                    <span>{cond.syndrome.split('(')[0].trim()}</span>
+                    <BookOpen className="size-3" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* 7 Conditional Clinical Detail Sections */}
 

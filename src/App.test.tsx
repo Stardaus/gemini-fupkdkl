@@ -204,4 +204,31 @@ describe('Formulari App integration', () => {
     // Verify Main App is rendered
     expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
   });
+
+  it('opens and closes National Antibiotic Guideline Section C modal from header', async () => {
+    await saveMedications(mockMeds);
+    render(<App />);
+
+    const acceptBtn = await screen.findByRole('button', {
+      name: /I Understand & Agree/i,
+    });
+    fireEvent.click(acceptBtn);
+
+    const nagBtn = screen.getByRole('button', {
+      name: /Open National Antibiotic Guideline Section C/i,
+    });
+    fireEvent.click(nagBtn);
+
+    expect(
+      await screen.findByRole('heading', {
+        name: /National Antibiotic Guideline/i,
+      })
+    ).toBeInTheDocument();
+    expect(screen.getByText('Section C: Primary Care')).toBeInTheDocument();
+
+    const closeNagBtn = screen.getByRole('button', {
+      name: /Close antibiotic guidelines/i,
+    });
+    fireEvent.click(closeNagBtn);
+  });
 });

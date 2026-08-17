@@ -84,4 +84,22 @@ describe('Header component', () => {
     fireEvent(window, new Event('online'));
     expect(screen.getByLabelText('Online')).toBeInTheDocument();
   });
+
+  it('renders and handles NAG button when onOpenNag is provided', () => {
+    const handleOpenNag = vi.fn();
+    render(
+      <Header
+        theme="dark"
+        onToggleTheme={() => {}}
+        onOpenNag={handleOpenNag}
+      />
+    );
+
+    const nagBtn = screen.getByRole('button', {
+      name: /Open National Antibiotic Guideline Section C/i,
+    });
+    expect(nagBtn).toBeInTheDocument();
+    fireEvent.click(nagBtn);
+    expect(handleOpenNag).toHaveBeenCalledTimes(1);
+  });
 });

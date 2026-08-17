@@ -203,4 +203,30 @@ describe('SettingsDialog component', () => {
     expect(handleClose).toHaveBeenCalledTimes(1);
     expect(handleReplayTour).toHaveBeenCalledTimes(1);
   });
+
+  it('handles NAG Section C card click to trigger onOpenNag and close dialog', () => {
+    const handleOpenNag = vi.fn();
+    const handleClose = vi.fn();
+
+    render(
+      <SettingsDialog
+        isOpen={true}
+        onClose={handleClose}
+        versionInfo={mockVersionInfo}
+        onCheckUpdate={() => {}}
+        theme="light"
+        onToggleTheme={() => {}}
+        orientationLock={{ isLocked: false, onToggle: () => {} }}
+        onOpenNag={handleOpenNag}
+      />
+    );
+
+    const nagBtn = screen.getByRole('button', {
+      name: /Open National Antibiotic Guideline Section C/i,
+    });
+    fireEvent.click(nagBtn);
+
+    expect(handleClose).toHaveBeenCalledTimes(1);
+    expect(handleOpenNag).toHaveBeenCalledTimes(1);
+  });
 });

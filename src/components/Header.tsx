@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Sun, Moon, Wifi, WifiOff, Download, Settings, BookOpen } from 'lucide-react';
+import { Sun, Moon, Wifi, WifiOff, Download, Settings, BookOpen, ShieldCheck } from 'lucide-react';
 import { Theme } from '../hooks/useTheme';
 
 export interface HeaderProps {
@@ -9,9 +9,18 @@ export interface HeaderProps {
   onInstallApp?: () => void;
   onOpenSettings?: () => void;
   onOpenIntro?: () => void;
+  onOpenNag?: () => void;
 }
 
-export function Header({ theme, onToggleTheme, isInstallable, onInstallApp, onOpenSettings, onOpenIntro }: HeaderProps) {
+export function Header({
+  theme,
+  onToggleTheme,
+  isInstallable,
+  onInstallApp,
+  onOpenSettings,
+  onOpenIntro,
+  onOpenNag,
+}: HeaderProps) {
   const [isOnline, setIsOnline] = useState<boolean>(
     typeof navigator !== 'undefined' ? navigator.onLine : true
   );
@@ -83,6 +92,20 @@ export function Header({ theme, onToggleTheme, isInstallable, onInstallApp, onOp
             className="min-h-[44px] min-w-[44px] p-2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-300 dark:border-slate-700/80 text-slate-700 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-300 rounded-xl transition-all active:scale-95 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 cursor-pointer flex items-center justify-center"
           >
             <BookOpen className="size-5 text-brand-600 dark:text-brand-400" aria-hidden="true" />
+          </button>
+        )}
+
+        {/* NAG Section C Guideline Button */}
+        {onOpenNag && (
+          <button
+            type="button"
+            onClick={onOpenNag}
+            aria-label="Open National Antibiotic Guideline Section C"
+            title="NAG Section C (Primary Care Antibiotic Guidelines)"
+            className="min-h-[44px] px-2.5 sm:px-3 py-2 bg-emerald-500/10 dark:bg-emerald-500/15 hover:bg-emerald-500/20 dark:hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 rounded-xl transition-all active:scale-95 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 cursor-pointer flex items-center gap-1.5"
+          >
+            <ShieldCheck className="size-5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+            <span className="text-xs font-bold">NAG</span>
           </button>
         )}
 

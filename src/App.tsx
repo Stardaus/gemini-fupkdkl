@@ -26,6 +26,7 @@ import { SettingsDialog } from './components/SettingsDialog';
 import { TourGuide } from './components/TourGuide';
 import { TourInviteBanner } from './components/TourInviteBanner';
 import { IntroPage } from './components/IntroPage';
+import { NagSectionCDialog } from './components/NagSectionCDialog';
 import { Loader2 } from 'lucide-react';
 
 export default function App() {
@@ -101,6 +102,19 @@ export default function App() {
   const [selectedMedication, setSelectedMedication] =
     useState<Medication | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [isNagOpen, setIsNagOpen] = useState<boolean>(false);
+  const [selectedNagConditionId, setSelectedNagConditionId] = useState<
+    string | null
+  >(null);
+
+  const handleOpenNag = useCallback((conditionId?: string) => {
+    setSelectedNagConditionId(conditionId || null);
+    setIsNagOpen(true);
+  }, []);
+
+  const handleSelectNagMedication = useCallback((medName: string) => {
+    setSearchQuery(medName);
+  }, []);
 
   // Pure domain query engine memoized against medications array
   const queryEngine = useMemo(
@@ -220,6 +234,7 @@ export default function App() {
             onInstallApp={promptInstall}
             onOpenSettings={() => setIsSettingsOpen(true)}
             onOpenIntro={() => navigateTo(`${import.meta.env.BASE_URL}intro`)}
+            onOpenNag={() => handleOpenNag()}
           />
 
           {/* Interactive Feature Tour Invitation */}
@@ -283,6 +298,18 @@ export default function App() {
           medication={selectedMedication}
           isOpen={!!selectedMedication}
           onClose={handleCloseDialog}
+          onOpenNag={handleOpenNag}
+        />
+
+        {/* National Antibiotic Guideline (NAG) Section C Dialog */}
+        <NagSectionCDialog
+          isOpen={isNagOpen}
+          onClose={() => {
+            setIsNagOpen(false);
+            setSelectedNagConditionId(null);
+          }}
+          initialConditionId={selectedNagConditionId}
+          onSelectMedicationName={handleSelectNagMedication}
         />
 
         {/* System & Settings Dialog */}
@@ -299,6 +326,7 @@ export default function App() {
           }}
           onReplayTour={startTour}
           onOpenIntro={() => navigateTo(`${import.meta.env.BASE_URL}intro`)}
+          onOpenNag={() => handleOpenNag()}
         />
 
         {/* Data Update Completion Toast */}
