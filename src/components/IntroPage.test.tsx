@@ -208,4 +208,38 @@ describe('IntroPage component', () => {
       screen.queryByText(/Active Internet Connection Required/i)
     ).not.toBeInTheDocument();
   });
+
+  it('renders National Antibiotic Guideline (NAG Section C) section with pathways and MOH portal link', () => {
+    render(
+      <IntroPage
+        theme="dark"
+        onToggleTheme={() => {}}
+        onLaunchApp={() => {}}
+        medications={mockMeds}
+      />
+    );
+
+    // Verify navbar link
+    const nagNavLink = screen.getByRole('link', { name: /NAG Guidelines/i });
+    expect(nagNavLink).toHaveAttribute('href', '#nag-guidelines');
+
+    // Verify section content
+    expect(
+      screen.getByRole('heading', { name: /National Antibiotic Guideline Integration/i })
+    ).toBeInTheDocument();
+    expect(screen.getByText('Section C: Primary Care Pathways')).toBeInTheDocument();
+    expect(screen.getByText(/Acute Bronchitis and Pneumonia/i)).toBeInTheDocument();
+    expect(screen.getByText(/Acute Otitis Media/i)).toBeInTheDocument();
+
+    // Verify MOH Google Sites action link
+    const portalLink = screen.getByRole('link', {
+      name: /Open MOH Section C Clinical Pathways Portal/i,
+    });
+    expect(portalLink).toHaveAttribute(
+      'href',
+      'https://sites.google.com/moh.gov.my/nag/contents/section-c-clinical-pathways-in-primary-care?authuser=0'
+    );
+    expect(portalLink).toHaveAttribute('target', '_blank');
+    expect(portalLink).toHaveAttribute('rel', 'noopener noreferrer');
+  });
 });
