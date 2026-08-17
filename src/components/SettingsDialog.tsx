@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { VersionInfo } from '../types/formulary';
 import { Theme } from '../hooks/useTheme';
+import { MOH_NAG_SECTION_C_URL } from '../data/nagSectionC';
 
 export interface CheckUpdateResult {
   hasUpdate?: boolean;
@@ -328,32 +329,29 @@ export function SettingsDialog({
           )}
 
           {/* National Antibiotic Guideline (NAG) Section C Card */}
-          {onOpenNag && (
-            <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 rounded-xl flex items-center justify-between sm:col-span-2">
-              <div className="space-y-0.5 pr-2">
-                <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 block">
-                  Clinical Guideline
-                </span>
-                <span className="text-sm font-bold text-slate-800 dark:text-slate-200">
-                  National Antibiotic Guideline (Section C)
-                </span>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 max-w-[240px]">
-                  Browse MOH primary care empirical antibiotic recommendations, dosages, and regimens.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  onClose();
-                  onOpenNag();
-                }}
-                aria-label="Open National Antibiotic Guideline Section C"
-                className="p-2.5 bg-emerald-500/10 dark:bg-emerald-500/20 border border-emerald-500/30 hover:border-emerald-500/60 rounded-xl text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/20 transition-all active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer shadow-xs shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
-              >
-                <ShieldCheck className="size-5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
-              </button>
+          <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 rounded-xl flex items-center justify-between sm:col-span-2">
+            <div className="space-y-0.5 pr-2">
+              <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 block">
+                Clinical Guideline (MOH Malaysia)
+              </span>
+              <span className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                National Antibiotic Guideline (Section C)
+              </span>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 max-w-[240px]">
+                Access the 9 primary care clinical pathways (C1–C9) on the official MOH portal.
+              </p>
             </div>
-          )}
+            <a
+              href={MOH_NAG_SECTION_C_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onOpenNag}
+              aria-label="Open MOH National Antibiotic Guideline Section C in Primary Care"
+              className="p-2.5 bg-emerald-500/10 dark:bg-emerald-500/20 border border-emerald-500/30 hover:border-emerald-500/60 rounded-xl text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/20 transition-all active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer shadow-xs shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+            >
+              <ShieldCheck className="size-5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+            </a>
+          </div>
         </div>
 
         {/* Database & App Version Information */}

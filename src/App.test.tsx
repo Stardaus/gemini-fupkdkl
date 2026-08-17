@@ -205,7 +205,7 @@ describe('Formulari App integration', () => {
     expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
   });
 
-  it('opens and closes National Antibiotic Guideline Section C modal from header', async () => {
+  it('renders National Antibiotic Guideline Section C link in header', async () => {
     await saveMedications(mockMeds);
     render(<App />);
 
@@ -214,21 +214,13 @@ describe('Formulari App integration', () => {
     });
     fireEvent.click(acceptBtn);
 
-    const nagBtn = screen.getByRole('button', {
-      name: /Open National Antibiotic Guideline Section C/i,
+    const nagLink = screen.getByRole('link', {
+      name: /Open MOH National Antibiotic Guideline Section C in Primary Care/i,
     });
-    fireEvent.click(nagBtn);
-
-    expect(
-      await screen.findByRole('heading', {
-        name: /National Antibiotic Guideline/i,
-      })
-    ).toBeInTheDocument();
-    expect(screen.getByText('Section C: Primary Care')).toBeInTheDocument();
-
-    const closeNagBtn = screen.getByRole('button', {
-      name: /Close antibiotic guidelines/i,
-    });
-    fireEvent.click(closeNagBtn);
+    expect(nagLink).toBeInTheDocument();
+    expect(nagLink).toHaveAttribute(
+      'href',
+      'https://sites.google.com/moh.gov.my/nag/contents/section-c-clinical-pathways-in-primary-care?authuser=0'
+    );
   });
 });

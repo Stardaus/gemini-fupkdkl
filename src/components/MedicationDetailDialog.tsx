@@ -11,24 +11,27 @@ import {
   Bookmark,
   ShieldCheck,
   BookOpen,
+  ExternalLink,
 } from 'lucide-react';
 import { Medication } from '../types/formulary';
 import { Quest3Link } from './Quest3Link';
 import { isNoneRestriction } from '../utils/restrictionUtils';
-import { findNagConditionsForMedication } from '../data/nagSectionC';
+import {
+  isAntibioticMedication,
+  getRelatedNagPathways,
+} from '../utils/antibioticClassifier';
+import { MOH_NAG_SECTION_C_URL } from '../data/nagSectionC';
 
 export interface MedicationDetailDialogProps {
   medication: Medication | null;
   isOpen: boolean;
   onClose: () => void;
-  onOpenNag?: (conditionId?: string) => void;
 }
 
 export function MedicationDetailDialog({
   medication,
   isOpen,
   onClose,
-  onOpenNag,
 }: MedicationDetailDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -175,40 +178,59 @@ export function MedicationDetailDialog({
 
         {/* NAG Section C Guideline Recommendation (if antibiotic/anti-infective) */}
         {(() => {
-          const nagConditions = findNagConditionsForMedication(name);
-          if (nagConditions.length === 0) return null;
+          if (!isAntibioticMedication(medication)) return null;
+          const pathways = getRelatedNagPathways(medication);
 
           return (
-            <div className="bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/30 rounded-xl p-4 space-y-2.5">
+            <div className="bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/30 rounded-xl p-4 space-y-3">
               <div className="flex items-center justify-between gap-2 flex-wrap">
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="size-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                   <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
-                    NAG Section C Recommendation
+                    National Antibiotic Guideline (NAG)
                   </span>
                 </div>
-                <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
-                  {nagConditions.length} Outpatient Indication{nagConditions.length > 1 ? 's' : ''}
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-800 dark:text-emerald-200 border border-emerald-500/30">
+                  Section C: Primary Care
                 </span>
               </div>
+
               <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                This medication is referenced in the National Antibiotic Guideline (Section C: Primary Care) for outpatient empirical regimens.
+                This formulation is governed by the Ministry of Health Malaysia (MOH) National Antimicrobial Guideline for primary care outpatient infection management.
               </p>
-              <div className="flex items-center gap-1.5 flex-wrap pt-1">
-                {nagConditions.map((cond) => (
-                  <button
-                    key={cond.id}
-                    type="button"
-                    onClick={() => {
-                      onClose();
-                      onOpenNag?.(cond.id);
-                    }}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs transition-all active:scale-95 cursor-pointer"
-                  >
-                    <span>{cond.syndrome.split('(')[0].trim()}</span>
-                    <BookOpen className="size-3" />
-                  </button>
-                ))}
+
+              {/* Pathway badges */}
+              <div className="space-y-1.5 pt-0.5">
+                <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block">
+                  Relevant Primary Care Clinical Pathways:
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {pathways.map((p) => (
+                    <span
+                      key={p.code}
+                      title={p.description}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-xs"
+                    >
+                      <strong className="text-emerald-600 dark:text-emerald-400 font-bold">{p.code}:</strong>
+                      <span>{p.title}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* External CTA to MOH Google Sites Section C */}
+              <div className="pt-1">
+                <a
+                  href={MOH_NAG_SECTION_C_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open MOH Section C Clinical Pathways in Primary Care Guideline"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-xs transition-all active:scale-95 cursor-pointer"
+                >
+                  <BookOpen className="size-4" />
+                  <span>Open MOH Section C Clinical Pathways</span>
+                  <ExternalLink className="size-3.5 ml-0.5 opacity-90" />
+                </a>
               </div>
             </div>
           );

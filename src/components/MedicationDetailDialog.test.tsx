@@ -124,9 +124,8 @@ describe('MedicationDetailDialog component', () => {
     );
   });
 
-  it('renders NAG Section C recommendation card for antibiotic medications and triggers onOpenNag', () => {
+  it('renders MOH NAG Section C recommendation card with pathways and external link for antibiotics', () => {
     const handleClose = vi.fn();
-    const handleOpenNag = vi.fn();
 
     const amoxicillinMed: Medication = {
       ...mockMed,
@@ -139,21 +138,44 @@ describe('MedicationDetailDialog component', () => {
         medication={amoxicillinMed}
         isOpen={true}
         onClose={handleClose}
-        onOpenNag={handleOpenNag}
       />
     );
 
-    expect(screen.getByText('NAG Section C Recommendation')).toBeInTheDocument();
     expect(
-      screen.getByText(/This medication is referenced in the National Antibiotic Guideline/i)
+      screen.getByText('National Antibiotic Guideline (NAG)')
+    ).toBeInTheDocument();
+    expect(screen.getByText('Section C: Primary Care')).toBeInTheDocument();
+    expect(
+      screen.getByText(/Ministry of Health Malaysia \(MOH\) National Antimicrobial Guideline/i)
     ).toBeInTheDocument();
 
-    const pharyngitisBtn = screen.getByRole('button', {
-      name: /Acute Pharyngitis \/ Tonsillitis/i,
-    });
-    fireEvent.click(pharyngitisBtn);
+    // Verify pathway badges
+    expect(screen.getByText(/Acute Bronchitis and Pneumonia/i)).toBeInTheDocument();
+    expect(screen.getByText(/Acute Otitis Media/i)).toBeInTheDocument();
 
-    expect(handleClose).toHaveBeenCalledTimes(1);
-    expect(handleOpenNag).toHaveBeenCalledWith('nag-pharyngitis');
+    // Verify external link anchor targeting MOH Google Sites
+    const nagLink = screen.getByRole('link', {
+      name: /Open MOH Section C Clinical Pathways in Primary Care Guideline/i,
+    });
+    expect(nagLink).toHaveAttribute(
+      'href',
+      'https://sites.google.com/moh.gov.my/nag/contents/section-c-clinical-pathways-in-primary-care?authuser=0'
+    );
+    expect(nagLink).toHaveAttribute('target', '_blank');
+    expect(nagLink).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
+  it('does not render NAG Section C card for non-antibiotic medications', () => {
+    render(
+      <MedicationDetailDialog
+        medication={mockMed} // Amlodipine
+        isOpen={true}
+        onClose={() => {}}
+      />
+    );
+
+    expect(
+      screen.queryByText('National Antibiotic Guideline (NAG)')
+    ).not.toBeInTheDocument();
   });
 });

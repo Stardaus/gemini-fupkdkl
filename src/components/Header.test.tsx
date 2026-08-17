@@ -85,7 +85,7 @@ describe('Header component', () => {
     expect(screen.getByLabelText('Online')).toBeInTheDocument();
   });
 
-  it('renders and handles NAG button when onOpenNag is provided', () => {
+  it('renders and handles NAG link with official MOH Google Sites URL', () => {
     const handleOpenNag = vi.fn();
     render(
       <Header
@@ -95,11 +95,18 @@ describe('Header component', () => {
       />
     );
 
-    const nagBtn = screen.getByRole('button', {
-      name: /Open National Antibiotic Guideline Section C/i,
+    const nagLink = screen.getByRole('link', {
+      name: /Open MOH National Antibiotic Guideline Section C in Primary Care/i,
     });
-    expect(nagBtn).toBeInTheDocument();
-    fireEvent.click(nagBtn);
+    expect(nagLink).toBeInTheDocument();
+    expect(nagLink).toHaveAttribute(
+      'href',
+      'https://sites.google.com/moh.gov.my/nag/contents/section-c-clinical-pathways-in-primary-care?authuser=0'
+    );
+    expect(nagLink).toHaveAttribute('target', '_blank');
+    expect(nagLink).toHaveAttribute('rel', 'noopener noreferrer');
+
+    fireEvent.click(nagLink);
     expect(handleOpenNag).toHaveBeenCalledTimes(1);
   });
 });

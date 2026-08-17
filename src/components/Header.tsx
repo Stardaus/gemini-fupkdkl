@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Sun, Moon, Wifi, WifiOff, Download, Settings, BookOpen, ShieldCheck } from 'lucide-react';
 import { Theme } from '../hooks/useTheme';
+import { MOH_NAG_SECTION_C_URL } from '../data/nagSectionC';
 
 export interface HeaderProps {
   theme: Theme;
@@ -95,19 +96,19 @@ export function Header({
           </button>
         )}
 
-        {/* NAG Section C Guideline Button */}
-        {onOpenNag && (
-          <button
-            type="button"
-            onClick={onOpenNag}
-            aria-label="Open National Antibiotic Guideline Section C"
-            title="NAG Section C (Primary Care Antibiotic Guidelines)"
-            className="min-h-[44px] px-2.5 sm:px-3 py-2 bg-emerald-500/10 dark:bg-emerald-500/15 hover:bg-emerald-500/20 dark:hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 rounded-xl transition-all active:scale-95 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 cursor-pointer flex items-center gap-1.5"
-          >
-            <ShieldCheck className="size-5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
-            <span className="text-xs font-bold">NAG</span>
-          </button>
-        )}
+        {/* NAG Section C Guideline Link */}
+        <a
+          href={MOH_NAG_SECTION_C_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onOpenNag}
+          aria-label="Open MOH National Antibiotic Guideline Section C in Primary Care"
+          title="MOH NAG Section C (Primary Care Clinical Pathways)"
+          className="min-h-[44px] px-2.5 sm:px-3 py-2 bg-emerald-500/10 dark:bg-emerald-500/15 hover:bg-emerald-500/20 dark:hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 rounded-xl transition-all active:scale-95 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 cursor-pointer flex items-center gap-1.5"
+        >
+          <ShieldCheck className="size-5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+          <span className="text-xs font-bold">NAG</span>
+        </a>
 
         {/* Install App Button */}
         {isInstallable && (
