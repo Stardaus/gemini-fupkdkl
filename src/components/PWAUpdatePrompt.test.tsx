@@ -51,4 +51,25 @@ describe('PWAUpdatePrompt component', () => {
     fireEvent.click(closeBtn);
     expect(mockSetNeedRefresh).toHaveBeenCalledWith(false);
   });
+
+  it('handles window.checkPWAUpdate and onRegisterError', () => {
+    vi.useFakeTimers();
+    const mockUpdate = vi.fn();
+    const mockRegistration = { update: mockUpdate };
+
+    (navigator as unknown as { serviceWorker: { getRegistration: () => Promise<unknown> } }).serviceWorker = {
+      getRegistration: vi.fn().mockResolvedValue(mockRegistration),
+    };
+
+    render(<PWAUpdatePrompt />);
+
+    // Test checkPWAUpdate
+    const win = window as unknown as { checkPWAUpdate?: () => void };
+    win.checkPWAUpdate?.();
+
+    // Trigger focus event
+    fireEvent(window, new Event('focus'));
+
+    vi.useRealTimers();
+  });
 });

@@ -173,4 +173,34 @@ describe('SettingsDialog component', () => {
     expect(handleClose).toHaveBeenCalledTimes(1);
     expect(handleOpenIntro).toHaveBeenCalledTimes(1);
   });
+
+  it('triggers orientationLock onToggle and onReplayTour', () => {
+    const handleToggleLock = vi.fn();
+    const handleReplayTour = vi.fn();
+    const handleClose = vi.fn();
+
+    render(
+      <SettingsDialog
+        isOpen={true}
+        onClose={handleClose}
+        versionInfo={mockVersionInfo}
+        onCheckUpdate={() => {}}
+        theme="light"
+        onToggleTheme={() => {}}
+        orientationLock={{ isLocked: false, onToggle: handleToggleLock }}
+        onReplayTour={handleReplayTour}
+      />
+    );
+
+    // Toggle orientation lock
+    const lockBtn = screen.getByRole('button', { name: /Toggle portrait orientation lock/i });
+    fireEvent.click(lockBtn);
+    expect(handleToggleLock).toHaveBeenCalledTimes(1);
+
+    // Replay tour button
+    const replayBtn = screen.getByRole('button', { name: /Replay interactive app tour/i });
+    fireEvent.click(replayBtn);
+    expect(handleClose).toHaveBeenCalledTimes(1);
+    expect(handleReplayTour).toHaveBeenCalledTimes(1);
+  });
 });

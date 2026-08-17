@@ -177,9 +177,35 @@ describe('IntroPage component', () => {
     );
 
     const screenshotBtns = screen.getAllByRole('button', { name: /Multi-Field Instant Search/i });
+    fireEvent.mouseEnter(screenshotBtns[0]);
+    fireEvent.touchStart(screenshotBtns[0]);
     fireEvent.click(screenshotBtns[0]);
 
     const activeImage = screen.getByAltText('Multi-Field Instant Search');
     expect(activeImage).toBeInTheDocument();
+
+    fireEvent.load(activeImage);
+    expect(activeImage).toHaveClass('opacity-100');
+  });
+
+  it('displays offline internet requirement banner when offline event is fired', () => {
+    render(
+      <IntroPage
+        theme="dark"
+        onToggleTheme={() => {}}
+        onLaunchApp={() => {}}
+        medications={mockMeds}
+      />
+    );
+
+    fireEvent(window, new Event('offline'));
+    expect(
+      screen.getByText(/Active Internet Connection Required/i)
+    ).toBeInTheDocument();
+
+    fireEvent(window, new Event('online'));
+    expect(
+      screen.queryByText(/Active Internet Connection Required/i)
+    ).not.toBeInTheDocument();
   });
 });

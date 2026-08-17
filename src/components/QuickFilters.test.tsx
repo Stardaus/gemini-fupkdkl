@@ -20,5 +20,9 @@ describe('QuickFilters component', () => {
     const quotaBtn = screen.getByRole('button', { name: /Filter by Quota Control Drugs/i });
     fireEvent.click(quotaBtn);
     expect(handleSelect).toHaveBeenCalledWith('QUOTA_ONLY');
+
+    const allBtn = screen.getByRole('button', { name: /Filter by All Medications/i });
+    fireEvent.click(allBtn);
+    expect(handleSelect).toHaveBeenCalledWith('ALL');
   });
 });

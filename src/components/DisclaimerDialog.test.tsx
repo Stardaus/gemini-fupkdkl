@@ -20,4 +20,23 @@ describe('DisclaimerDialog component', () => {
     fireEvent.click(acceptBtn);
     expect(handleAccept).toHaveBeenCalledTimes(1);
   });
+
+  it('renders nothing when isOpen is false and prevents ESC cancel', () => {
+    const handleAccept = vi.fn();
+    const { container, rerender } = render(
+      <DisclaimerDialog isOpen={true} onAccept={handleAccept} />
+    );
+
+    const dialog = container.querySelector('dialog');
+    expect(dialog).toBeInTheDocument();
+
+    // Trigger cancel event (ESC key)
+    const cancelEvent = new Event('cancel', { cancelable: true });
+    dialog?.dispatchEvent(cancelEvent);
+    expect(cancelEvent.defaultPrevented).toBe(true);
+
+    // Re-render closed
+    rerender(<DisclaimerDialog isOpen={false} onAccept={handleAccept} />);
+    expect(container.querySelector('dialog')).toBeNull();
+  });
 });

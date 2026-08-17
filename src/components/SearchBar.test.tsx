@@ -169,4 +169,22 @@ describe('SearchBar component', () => {
     
     vi.useRealTimers();
   });
+
+  it('focuses search input on Cmd+K and / keyboard shortcuts and prevents default form submit', () => {
+    render(<SearchBar value="" onChange={() => {}} onClear={() => {}} />);
+
+    const input = screen.getByRole('searchbox', { name: /Search medications/i });
+    const form = screen.getByRole('search');
+
+    fireEvent(form, new Event('submit', { cancelable: true }));
+
+    // Trigger Cmd+K
+    fireEvent.keyDown(window, { key: 'k', metaKey: true });
+    expect(document.activeElement).toBe(input);
+
+    // Blur and trigger Slash
+    input.blur();
+    fireEvent.keyDown(window, { key: '/' });
+    expect(document.activeElement).toBe(input);
+  });
 });

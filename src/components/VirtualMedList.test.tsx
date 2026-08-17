@@ -4,15 +4,20 @@ import { VirtualMedList } from './VirtualMedList';
 import { Medication } from '../types/formulary';
 
 vi.mock('@tanstack/react-virtual', () => ({
-  useVirtualizer: ({ count }: { count: number }) => ({
-    getTotalSize: () => count * 110,
-    getVirtualItems: () =>
-      Array.from({ length: count }, (_, index) => ({
-        index,
-        start: index * 110,
-        size: 110,
-      })),
-  }),
+  useVirtualizer: (options: any) => {
+    options.getScrollElement?.();
+    options.estimateSize?.();
+    return {
+      getTotalSize: () => options.count * 110,
+      getVirtualItems: () =>
+        Array.from({ length: options.count }, (_, index) => ({
+          index,
+          start: index * 110,
+          size: 110,
+        })),
+      measureElement: vi.fn(),
+    };
+  },
 }));
 
 const mockMeds: Medication[] = [
@@ -42,13 +47,18 @@ describe('VirtualMedList component', () => {
     expect(screen.getByText('No Medications Found')).toBeInTheDocument();
   });
 
-  it('renders virtualized medication list container', () => {
+  it('renders virtualized medication list container and handles selection', () => {
+    const handleSelect = vi.fn();
     render(
-      <VirtualMedList medications={mockMeds} onSelectMedication={() => {}} />
+      <VirtualMedList medications={mockMeds} onSelectMedication={handleSelect} />
     );
     expect(
       screen.getByRole('region', { name: /Medication list/i })
     ).toBeInTheDocument();
     expect(screen.getByText('Metformin 500mg Tablet')).toBeInTheDocument();
+
+    const card = screen.getByRole('button', { name: /View details for Metformin/i });
+    card.click();
+    expect(handleSelect).toHaveBeenCalledWith(mockMeds[0]);
   });
 });

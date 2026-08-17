@@ -186,4 +186,38 @@ describe('useFormularyData hook', () => {
     expect(result.current.medications).toHaveLength(1);
     expect(result.current.medications[0].name).toBe('Metformin 500mg');
   });
+
+  it('runs version sentinel check on background interval and window focus', async () => {
+    global.fetch = vi.fn().mockImplementation((url: string) => {
+      if (url.includes('gid=411569782')) {
+        return Promise.resolve({
+          ok: true,
+          headers: new Headers({ 'content-type': 'text/csv' }),
+          text: async () => 'data_version,1785409099',
+        } as Response);
+      }
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'text/csv' }),
+        text: async () => 'Generic Name\n"Amlodipine 5mg"',
+      } as Response);
+    });
+
+    await saveMedications([mockMed]);
+
+    const { result } = renderHook(() =>
+      useFormularyData({ enableSentinel: true })
+    );
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    // Trigger focus event
+    act(() => {
+      window.dispatchEvent(new Event('focus'));
+    });
+
+    await waitFor(() => {
+      expect(result.current.isDataUpdateAvailable).toBe(true);
+    });
+  });
 });

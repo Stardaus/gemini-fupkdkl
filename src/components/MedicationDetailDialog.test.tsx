@@ -93,10 +93,34 @@ describe('MedicationDetailDialog component', () => {
 
     // Should have the amber warning header
     expect(screen.getByText('Prescribing Restrictions / Quota Control')).toBeInTheDocument();
-    
-    // Should NOT have the neutral header
-    // Using getAllByText/queryAllByText and checking length or exact match if needed
-    // The exact text "Prescribing Restrictions" without "/ Quota Control" might not be queryable directly without exact matching
     expect(screen.queryByText('Prescribing Restrictions', { exact: true })).not.toBeInTheDocument();
+  });
+
+  it('handles backdrop click and native close event to trigger onClose', () => {
+    const handleClose = vi.fn();
+    const { container, rerender } = render(
+      <MedicationDetailDialog
+        medication={mockMed}
+        isOpen={true}
+        onClose={handleClose}
+      />
+    );
+
+    const dialog = container.querySelector('dialog');
+    if (dialog) {
+      fireEvent.click(dialog);
+      expect(handleClose).toHaveBeenCalled();
+
+      fireEvent(dialog, new Event('close'));
+      expect(handleClose).toHaveBeenCalled();
+    }
+
+    rerender(
+      <MedicationDetailDialog
+        medication={mockMed}
+        isOpen={false}
+        onClose={handleClose}
+      />
+    );
   });
 });

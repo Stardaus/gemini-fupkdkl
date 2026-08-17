@@ -74,4 +74,14 @@ describe('Header component', () => {
     fireEvent.click(guideBtn);
     expect(handleOpenIntro).toHaveBeenCalledTimes(1);
   });
+
+  it('updates network status indicator when online and offline window events fire', () => {
+    render(<Header theme="dark" onToggleTheme={() => {}} />);
+
+    fireEvent(window, new Event('offline'));
+    expect(screen.getByLabelText('Offline')).toBeInTheDocument();
+
+    fireEvent(window, new Event('online'));
+    expect(screen.getByLabelText('Online')).toBeInTheDocument();
+  });
 });
