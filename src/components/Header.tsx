@@ -7,6 +7,7 @@ export interface HeaderProps {
   theme: Theme;
   onToggleTheme: () => void;
   isInstallable?: boolean;
+  isStandalone?: boolean;
   onInstallApp?: () => void;
   onOpenSettings?: () => void;
   onOpenIntro?: () => void;
@@ -17,6 +18,7 @@ export function Header({
   theme,
   onToggleTheme,
   isInstallable,
+  isStandalone = false,
   onInstallApp,
   onOpenSettings,
   onOpenIntro,
@@ -83,8 +85,8 @@ export function Header({
           )}
         </span>
 
-        {/* Guide & Info Link */}
-        {onOpenIntro && (
+        {/* Guide & Info Link (visible in browser mode, hidden in installed standalone app mode) */}
+        {!isStandalone && onOpenIntro && (
           <button
             type="button"
             onClick={onOpenIntro}

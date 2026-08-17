@@ -59,13 +59,14 @@ describe('Header component', () => {
     expect(handleOpenSettings).toHaveBeenCalledTimes(1);
   });
 
-  it('renders and handles Guide button when onOpenIntro is provided', () => {
+  it('renders and handles Guide button when onOpenIntro is provided in browser mode', () => {
     const handleOpenIntro = vi.fn();
     render(
       <Header
         theme="dark"
         onToggleTheme={() => {}}
         onOpenIntro={handleOpenIntro}
+        isStandalone={false}
       />
     );
 
@@ -73,6 +74,22 @@ describe('Header component', () => {
     expect(guideBtn).toBeInTheDocument();
     fireEvent.click(guideBtn);
     expect(handleOpenIntro).toHaveBeenCalledTimes(1);
+  });
+
+  it('hides Guide button when isStandalone is true', () => {
+    const handleOpenIntro = vi.fn();
+    render(
+      <Header
+        theme="dark"
+        onToggleTheme={() => {}}
+        onOpenIntro={handleOpenIntro}
+        isStandalone={true}
+      />
+    );
+
+    expect(
+      screen.queryByRole('button', { name: /Open App Overview and Installation Guide/i })
+    ).not.toBeInTheDocument();
   });
 
   it('updates network status indicator when online and offline window events fire', () => {

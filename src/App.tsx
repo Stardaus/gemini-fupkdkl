@@ -34,6 +34,7 @@ export default function App() {
   const { recentMeds, addRecentMed, clearRecentMeds } = useRecentMeds();
   const {
     isInstallable,
+    isStandalone,
     isBannerVisible,
     isIOSModalOpen,
     promptInstall,
@@ -217,6 +218,7 @@ export default function App() {
             theme={theme}
             onToggleTheme={toggleTheme}
             isInstallable={isInstallable}
+            isStandalone={isStandalone}
             onInstallApp={promptInstall}
             onOpenSettings={() => setIsSettingsOpen(true)}
             onOpenIntro={() => navigateTo(`${import.meta.env.BASE_URL}intro`)}
