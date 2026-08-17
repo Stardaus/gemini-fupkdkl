@@ -131,6 +131,7 @@ describe('MedicationDetailDialog component', () => {
       ...mockMed,
       id: 'amox-1',
       name: 'Amoxicillin Trihydrate 500mg Capsule',
+      fukkmSystemGroup: 'Antiinfectives for Systemic Use > Antibacterials for Systemic Use',
     };
 
     render(
